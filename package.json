@@ -1,0 +1,23 @@
+{
+  "name": "joblist-city-workers",
+  "version": "0.0.1",
+  "description": "Workers for joblist.city, fetching jobs from job-board-providers APIs",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node index.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+ssh://git@gitlab.com/joblist/workers.git"
+  },
+  "author": "ugrp",
+  "license": "GPL-3.0",
+  "bugs": {
+    "url": "https://gitlab.com/joblist/workers/issues"
+  },
+  "homepage": "https://gitlab.com/joblist/workers#readme",
+  "dependencies": {
+    "node-fetch": "^2.6.1"
+  }
+}
