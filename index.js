@@ -1,24 +1,13 @@
-const fetch = require('node-fetch')
+const recruitee = require('./providers/recruitee')
+const greenhouse = require('./providers/greenhouse')
 
-const country = 'germany'
-const city = 'berlin'
-const hostname = 'idealocareer'
+const recruiteeHost = 'idealocareer'
+const greenhouseHost = 'fulfillment'
 
-const getJobs = async (host) => {
-	const url = `https://${host}.recruitee.com/api/offers`
-	let data
-	try {
-		data = await fetch(url)
-			.then(res => res.json())
-			.then(data => {
-				return data.offers.filter(item => item.status === 'published')
-			})
-	} catch (error) {
-		console.log('error fetching jobs', error)
-	}
-	return data
-}
+/* recruitee.getJobs({hostname: recruiteeHost}).then(jobs => {
+ * 	console.log('recruitee jobs', jobs)
+ * }) */
 
-getJobs(hostname).then(jobs => {
-	console.log('jobs', jobs)
+greenhouse.getJobs({hostname: greenhouseHost}).then(jobs => {
+	console.log('greenhouse jobs', jobs)
 })
