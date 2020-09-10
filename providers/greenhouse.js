@@ -1,5 +1,20 @@
 const fetch = require('node-fetch')
 
+const providerId = 'greenhouse'
+
+const serializeJobs = (jobs, hostname) => {
+	return jobs.map(job => {
+		console.log(job)
+		return {
+			/* the one needed for algolia */
+			objectID: `${providerId}-${hostname}-${job.id}`,
+			name: job.title,
+			url: `${job.carreers_url}`,
+			publishedDate: job.created_at
+		}
+	})
+}
+
 const getJobs = async ({
 	hostname,
 	city,

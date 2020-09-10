@@ -46,10 +46,16 @@ const promises = companies.map(company => {
 	}
 })
 
-Promise.all(promises).then(jobs => {
-	console.log('jobs', jobs.length)
+Promise.all(promises).then(responses => {
+	let allJobs = []
 
-	index.saveObjects(jobs).then(({ objectsIds }) => {
+	responses.filter(res => res).forEach(jobs => {
+		jobs.forEach(job => {
+			allJobs.push(job)
+		})
+	})
+
+	index.saveObjects(allJobs).then(({ objectsIds }) => {
  		console.log('algolia save success')
  	}).catch(err => {
  		console.log('algolia save error', err)
