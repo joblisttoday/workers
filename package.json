@@ -18,6 +18,8 @@
   },
   "homepage": "https://gitlab.com/joblist/workers#readme",
   "dependencies": {
+    "algoliasearch": "^4.4.0",
+    "dotenv": "^8.2.0",
     "node-fetch": "^2.6.1"
   }
 }
