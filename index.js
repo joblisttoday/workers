@@ -17,7 +17,7 @@ if (process.env.NODE_ENV === 'production') {
 	const {
 		'ALGOLIA_PROD_APPLICATION_ID': algoliaAppId,
 		'ALGOLIA_PROD_ADMIN_API_KEY': algoliaApiKey
-	} = config.parsed
+	} = process.env
 } else {
 	const indexName = 'dev_jobs'
 	const {
