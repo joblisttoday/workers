@@ -8,3 +8,9 @@ pages:
     - public
   only:
   - master
+
+algolia-jobs:on-schedule:
+  only:
+    - schedules
+  script:
+    - npm run start
