@@ -10,6 +10,7 @@ pages:
   - master
 
 algolia-jobs:on-schedule:
+  image: node:latest
   only:
     - schedules
   script:

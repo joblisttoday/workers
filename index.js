@@ -12,12 +12,19 @@ const smartrecruiters = require('./providers/smartrecruiters')
 	 test algolia
  */
 
-const {
-	'ALGOLIA_DEV_APPLICATION_ID': algoliaAppId,
-	'ALGOLIA_DEV_ADMIN_API_KEY': algoliaApiKey
-} = config.parsed
-const indexName = 'dev_jobs'
-
+if (process.env.NODE_ENV === 'production') {
+	const indexName = 'prod_jobs'
+	const {
+		'ALGOLIA_PROD_APPLICATION_ID': algoliaAppId,
+		'ALGOLIA_PROD_ADMIN_API_KEY': algoliaApiKey
+	} = config.parsed
+} else {
+	const indexName = 'dev_jobs'
+	const {
+		'ALGOLIA_DEV_APPLICATION_ID': algoliaAppId,
+		'ALGOLIA_DEV_ADMIN_API_KEY': algoliaApiKey
+	} = config.parsed
+}
 
 const client = algoliasearch(algoliaAppId, algoliaApiKey)
 const index = client.initIndex(indexName)
