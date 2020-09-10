@@ -4,7 +4,6 @@ const providerId = 'greenhouse'
 
 const serializeJobs = (jobs, hostname) => {
 	return jobs.map(job => {
-		console.log(job)
 		return {
 			/* the one needed for algolia */
 			objectID: `${providerId}-${hostname}-${job.id}`,
