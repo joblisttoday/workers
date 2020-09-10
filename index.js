@@ -14,19 +14,20 @@ const smartrecruiters = require('./providers/smartrecruiters')
 
 let algoliaAppId = null
 let algoliaApiKey = null
+let indexName = null
 
 if (process.env.NODE_ENV === 'production') {
-	const indexName = 'prod_jobs'
+	indexName = 'prod_jobs'
 	algoliaAppId = process.env['ALGOLIA_PROD_APPLICATION_ID']
 	algoliaApiKey = process.env ['ALGOLIA_PROD_ADMIN_API_KEY']
 } else {
-	const indexName = 'dev_jobs'
+	indexName = 'dev_jobs'
 	algoliaAppId = config.parsed['ALGOLIA_DEV_APPLICATION_ID']
 	algoliaApiKey = config.parsed['ALGOLIA_DEV_ADMIN_API_KEY']
 }
 
-if (!algoliaAppId || !algoliaApiKey) {
-	console.log('Required algoliaAppId && algoliaApiKey')
+if (!algoliaAppId || !algoliaApiKey || !indexName) {
+	console.log('Required algoliaAppId && algoliaApiKey && indexName')
 	return
 }
 
