@@ -1,5 +1,8 @@
 const config = require('dotenv').config()
+
 const algoliasearch = require("algoliasearch")
+
+const database = require('./database')
 const recruitee = require('./providers/recruitee')
 const greenhouse = require('./providers/greenhouse')
 const smartrecruiters = require('./providers/smartrecruiters')
@@ -24,27 +27,33 @@ const index = client.initIndex(indexName)
 	 test the providers
  */
 
+const providerMethods = {
+	recruitee: recruitee.getJobs,
+	greenhouse: greenhouse.getJobs,
+	smartrecruiters: smartrecruiters.getJobs
+}
 const city = 'berlin'
-const recruiteeHost = 'idealocareer'
-const greenhouseHost = 'fulfillment'
-const smartrecruitersHost = 'smartrecruiters'
+const companies = database.getCompanies()
 
-/* recruitee.getJobs({hostname: recruiteeHost}).then(jobs => {
- * 	console.log('recruitee jobs', jobs)
- * }) */
+const promises = companies.map(company => {
+	const providerMethod = providerMethods[company.provider]
+	if (typeof providerMethod === 'function') {
+		return providerMethod({
+			hostname: company.hostname
+		})
+	} else {
+		return null
+	}
+})
 
-/* greenhouse.getJobs({hostname: greenhouseHost}).then(jobs => {
- *  	console.log('greenhouse jobs', jobs)
- * }) */
+Promise.all(promises).then(jobs => {
+	console.log('jobs', jobs.length)
 
-smartrecruiters.getJobs({
- 	hostname: smartrecruitersHost,
- 	city: city
-}).then(jobs => {
- 	/* console.log('smartrecruiters jobs', jobs) */
 	index.saveObjects(jobs).then(({ objectsIds }) => {
-		console.log(objectsIds)
-	}).catch(err => {
-		console.log(err)
-	})
+ 		console.log('algolia save success')
+ 	}).catch(err => {
+ 		console.log('algolia save error', err)
+ 	})
+}).catch(err => {
+	console.error(err)
 })

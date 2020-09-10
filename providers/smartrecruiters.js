@@ -17,7 +17,7 @@ const serializeJobs = (jobs, hostname) => {
 		return {
 			/* the one needed for algolia */
 			objectID: `${providerId}-${hostname}-${job.uuid}`,
-			title: job.name,
+			name: job.name,
 			url: `${jobPostingBaseUrl}/${hostname}/${job.id}`,
 			publishedDate: job.releasedDate
 		}

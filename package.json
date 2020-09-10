@@ -18,6 +18,7 @@
   },
   "homepage": "https://gitlab.com/joblist/workers#readme",
   "dependencies": {
+    "@iarna/toml": "^2.2.5",
     "algoliasearch": "^4.4.0",
     "dotenv": "^8.2.0",
     "node-fetch": "^2.6.1"
