@@ -9,21 +9,25 @@ const smartrecruiters = require('./providers/smartrecruiters')
 
 
 /*
-	 test algolia
+	 algolia config
  */
+
+let algoliaAppId = null
+let algoliaApiKey = null
 
 if (process.env.NODE_ENV === 'production') {
 	const indexName = 'prod_jobs'
-	const {
-		'ALGOLIA_PROD_APPLICATION_ID': algoliaAppId,
-		'ALGOLIA_PROD_ADMIN_API_KEY': algoliaApiKey
-	} = process.env
+	algoliaAppId = process.env['ALGOLIA_PROD_APPLICATION_ID']
+	algoliaApiKey = process.env ['ALGOLIA_PROD_ADMIN_API_KEY']
 } else {
 	const indexName = 'dev_jobs'
-	const {
-		'ALGOLIA_DEV_APPLICATION_ID': algoliaAppId,
-		'ALGOLIA_DEV_ADMIN_API_KEY': algoliaApiKey
-	} = config.parsed
+	algoliaAppId = config.parsed['ALGOLIA_DEV_APPLICATION_ID']
+	algoliaApiKey = config.parsed['ALGOLIA_DEV_ADMIN_API_KEY']
+}
+
+if (!algoliaAppId || !algoliaApiKey) {
+	console.log('Required algoliaAppId && algoliaApiKey')
+	return
 }
 
 const client = algoliasearch(algoliaAppId, algoliaApiKey)
