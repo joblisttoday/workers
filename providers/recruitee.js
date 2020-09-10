@@ -9,7 +9,8 @@ const serializeJobs = (jobs, hostname) => {
 			objectID: `${providerId}-${hostname}-${job.id}`,
 			name: job.title,
 			url: `${job.carreers_url}`,
-			publishedDate: job.created_at
+			publishedDate: job.created_at,
+			location: `${job.city}, ${job.country}`
 		}
 	})
 }

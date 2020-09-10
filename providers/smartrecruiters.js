@@ -19,7 +19,8 @@ const serializeJobs = (jobs, hostname) => {
 			objectID: `${providerId}-${hostname}-${job.uuid}`,
 			name: job.name,
 			url: `${jobPostingBaseUrl}/${hostname}/${job.id}`,
-			publishedDate: job.releasedDate
+			publishedDate: job.releasedDate,
+			location: `${job.city}, ${job.country}`
 		}
 	})
 }
