@@ -42,6 +42,10 @@ const getJobs = async ({
 					search = country
 				}
 
+				if (!data.jobs) {
+					return []
+				}
+
 				if (!search) {
 					return data.jobs
 				} else {
