@@ -68,16 +68,16 @@ Promise.all(promises).then(responses => {
 		})
 	})
 
-	console.log(allJobs.length)
+	console.info('Jobs:', allJobs.length)
 
 	if (process.env.NODE_ENV === 'production') {
 		index.saveObjects(allJobs).then(({ objectsIds }) => {
- 			console.log('algolia save success')
+ 			console.info('algolia save success')
  		}).catch(err => {
  			console.log('algolia save error', err)
  		})
 	} else {
-		console.log('Dev: algolia upload has been skipped')
+		console.info('Dev: algolia upload has been skipped')
 	}
 }).catch(err => {
 	console.error(err)

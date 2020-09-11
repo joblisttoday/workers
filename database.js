@@ -47,7 +47,8 @@ const getFileContents = (fileNames) => {
 const serializeJson = (item) => {
 	return {
 		provider: item['job_board_provider'],
-		hostname: item['job_board_hostname']
+		hostname: item['job_board_hostname'],
+		title: item.title
 	}
 }
 
