@@ -9,20 +9,22 @@ const getLocation = job => {
 	return job.offices.map(office => office.location).join('-')
 }
 
-const serializeJobs = (jobs, hostname) => {
+const serializeJobs = (jobs, hostname, companyTitle) => {
 	return jobs.map(job => {
 		return {
 			objectID: `${providerId}-${hostname}-${job.id}`,
 			name: job.title,
 			url: `${job.absolute_url}`,
 			publishedDate: job.updated_at,
-			location: getLocation(job)
+			location: getLocation(job),
+			companyTitle: companyTitle
 		}
 	})
 }
 
 const getJobs = async ({
 	hostname,
+	companyTitle,
 	city,
 	country
 }) => {
@@ -57,7 +59,7 @@ const getJobs = async ({
 		console.log('error fetching jobs')
 	}
 
-	const s = serializeJobs(allJobs, hostname)
+	const s = serializeJobs(allJobs, hostname, companyTitle)
 	return s
 }
 

@@ -2,7 +2,7 @@ const fetch = require('node-fetch')
 
 const providerId = 'recruitee'
 
-const serializeJobs = (jobs, hostname) => {
+const serializeJobs = (jobs, hostname, companyTitle) => {
 	return jobs.map(job => {
 		return {
 			/* the one needed for algolia */
@@ -10,13 +10,15 @@ const serializeJobs = (jobs, hostname) => {
 			name: job.title,
 			url: `${job.carreers_url}`,
 			publishedDate: job.created_at,
-			location: `${job.city}, ${job.country}`
+			location: `${job.city}, ${job.country}`,
+			companyTitle: companyTitle
 		}
 	})
 }
 
 const getJobs = async ({
 	hostname,
+	companyTitle,
 	city,
 	country
 }) => {
@@ -44,7 +46,7 @@ const getJobs = async ({
 	}
 
 	if (data) {
-		return serializeJobs(data, hostname)
+		return serializeJobs(data, hostname, companyTitle)
 	} else {
 		return []
 	}

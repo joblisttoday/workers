@@ -12,7 +12,7 @@ const providerId = 'smartrecruiters'
 const baseUrl = 'https://api.smartrecruiters.com/v1/companies'
 const jobPostingBaseUrl = `https://jobs.smartrecruiters.com`
 
-const serializeJobs = (jobs, hostname) => {
+const serializeJobs = (jobs, hostname, companyTitle) => {
 	return jobs.map(job => {
 		return {
 			/* the one needed for algolia */
@@ -20,13 +20,16 @@ const serializeJobs = (jobs, hostname) => {
 			name: job.name,
 			url: `${jobPostingBaseUrl}/${hostname}/${job.id}`,
 			publishedDate: job.releasedDate,
-			location: `${job.location.city}, ${job.location.country}`
+			location: `${job.location.city}, ${job.location.country}`,
+			companyTitle: companyTitle
 		}
 	})
 }
 
 const getJobs = async ({
 	hostname,
+	companyTitle,
+	city,
 	country
 }) => {
 	const url = `${baseUrl}/${hostname}/postings`
@@ -42,7 +45,7 @@ const getJobs = async ({
 		console.log('error fetching jobs', error)
 	}
 
-	return serializeJobs(jobs, hostname)
+	return serializeJobs(jobs, hostname, companyTitle)
 }
 
 exports.getJobs = getJobs

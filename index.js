@@ -51,7 +51,8 @@ const promises = companies.map(company => {
 	const providerMethod = providerMethods[company.provider]
 	if (typeof providerMethod === 'function') {
 		return providerMethod({
-			hostname: company.hostname
+			hostname: company.hostname,
+			companyTitle: company.title
 		})
 	} else {
 		return null
