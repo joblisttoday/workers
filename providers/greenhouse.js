@@ -2,7 +2,10 @@ const fetch = require('node-fetch')
 
 const providerId = 'greenhouse'
 
-const getLocation = (job) => {
+const getLocation = job => {
+	if (!job.offices) {
+		return job.location
+	}
 	return job.offices.map(office => office.location).join('-')
 }
 
