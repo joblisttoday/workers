@@ -1,4 +1,4 @@
-carreer_page_url = "https://liefery-jobs.personio.de"
+career_page_url = "https://liefery-jobs.personio.de"
 job_board_provider = "personio"
 job_board_hostname = "liefery-jobs"
 title = "Liefery"

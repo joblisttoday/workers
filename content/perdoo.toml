@@ -1,4 +1,4 @@
-carreer_page_url = "https://perdoo.recruitee.com/"
+career_page_url = "https://perdoo.recruitee.com/"
 title = "Perdoo"
 slug = "perdoo"
 body = "Perdoo is a simple yet powerful goal management platform used by thousands of employees in hundreds of companies across the world."

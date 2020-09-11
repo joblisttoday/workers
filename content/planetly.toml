@@ -1,4 +1,4 @@
-carreer_page_url = "https://planetly-jobs.personio.de"
+career_page_url = "https://planetly-jobs.personio.de"
 job_board_provider = "personio"
 job_board_hostname = "planetly-jobs"
 title = "Planetly"

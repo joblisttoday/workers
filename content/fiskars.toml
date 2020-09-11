@@ -1,4 +1,4 @@
-carreer_page_url = "https://www.fiskarsgroup.com/careers"
+career_page_url = "https://www.fiskarsgroup.com/careers"
 job_board_provider = "smartrecruiters"
 job_board_hostname = "FiskarsGermanyGmbH1"
 title = "Fiskars"

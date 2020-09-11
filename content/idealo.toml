@@ -1,5 +1,5 @@
 
-carreer_page_url = "https://idealocareer.recruitee.com"
+career_page_url = "https://idealocareer.recruitee.com"
 title = "Idealo"
 body = "Price comparison service, allows users to compare prices on a range of products from hundreds of shops."
 tags = ["startup", "price-comparison"]

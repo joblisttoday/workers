@@ -1,4 +1,4 @@
-carreer_page_url = "https://upvestco.recruitee.com"
+career_page_url = "https://upvestco.recruitee.com"
 title = "upvest"
 slug = "upvest"
 body = "Real estate asset tokenization made simple"

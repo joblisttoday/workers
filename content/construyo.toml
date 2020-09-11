@@ -1,4 +1,4 @@
-carreer_page_url = "https://partum-gmbh-jobs.personio.de"
+career_page_url = "https://partum-gmbh-jobs.personio.de"
 job_board_provider = "personio"
 job_board_hostname = "partum-gmbh-jobs"
 title = "Construyo"

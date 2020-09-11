@@ -1,9 +1,7 @@
 body = "Atheneum brings together the world’s leading professionals with the most qualified experts for experienced knowledge sharing and empowered decision-making. #expertise"
 created_at = "2018-01-29T12:36:01.528Z"
 is_approved = true
-carreer_page_url = "https://atheneum.recruitee.com"
-job_board_provider = "recruitee"
-job_board_hostname = "atheneum"
+career_page_url = "https://atheneum.recruitee.com"
 company_url = "https://www.atheneum.ai"
 linkedin_url = "https://www.linkedin.com/company/atheneum-partners"
 latitude = 52.5289797

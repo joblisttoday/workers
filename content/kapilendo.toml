@@ -1,7 +1,7 @@
 body = "Funding #marketplace where entrepreneurs in search of funding meet investors in search of a simple #investment opportunity"
 created_at = "2018-11-20T16:23:35.353Z"
 is_approved = true
-carreer_page_url = "https://kapilendo-ag-jobs.personio.de/"
+career_page_url = "https://kapilendo-ag-jobs.personio.de/"
 job_board_provider = "personio"
 job_board_hostname = "kapilendo-ag-jobs"
 latitude = 52.501652

@@ -1,4 +1,4 @@
-carreer_page_url = "https://www.agentur-brandung.de/karriere"
+career_page_url = "https://www.agentur-brandung.de/karriere"
 job_board_provider = "smartrecruiters"
 job_board_hostname = "BrandungGmbHCoKG"
 title = "Brandung GmbH"

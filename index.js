@@ -67,11 +67,17 @@ Promise.all(promises).then(responses => {
 		})
 	})
 
-	index.saveObjects(allJobs).then(({ objectsIds }) => {
- 		console.log('algolia save success')
- 	}).catch(err => {
- 		console.log('algolia save error', err)
- 	})
+	console.log(allJobs.length)
+
+	if (process.env.NODE_ENV === 'production') {
+		index.saveObjects(allJobs).then(({ objectsIds }) => {
+ 			console.log('algolia save success')
+ 		}).catch(err => {
+ 			console.log('algolia save error', err)
+ 		})
+	} else {
+		console.log('Dev: algolia upload has been skipped')
+	}
 }).catch(err => {
 	console.error(err)
 })

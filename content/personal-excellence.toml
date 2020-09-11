@@ -1,4 +1,4 @@
-carreer_page_url = "https://www.personal-excellence.de/en/jobs"
+career_page_url = "https://www.personal-excellence.de/en/jobs"
 job_board_provider = "smartrecruiters"
 job_board_hostname = "Frau2"
 title = "Personal Excellence"

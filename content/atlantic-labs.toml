@@ -1,6 +1,4 @@
-carreer_page_url = "https://atlanticlabs.recruitee.com"
-job_board_provider = "recruitee"
-job_board_hostname = "atlanticlabs"
+career_page_url = "https://atlanticlabs.recruitee.com"
 title = "Atlantic Labs"
 slug = "atlantic-labs"
 body = "We partner with founders early, providing the capital, tools and network necessary to growing their companies and accompanying them on their entrepreneurial journey."

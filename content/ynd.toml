@@ -1,4 +1,4 @@
-carreer_page_url = "https://ynd1.recruitee.com"
+career_page_url = "https://ynd1.recruitee.com"
 slug = "ynd"
 title = "YND"
 body = "Digital Product Agency and Startup Studio. We work in FinTech, Wearables, Virtual Reality and Machine Intelligence. We help management teams at big companies, such as airlines, banks and telecom providers, to be innovative like startups."

@@ -1,4 +1,4 @@
-carreer_page_url = "https://pylotjobs.recruitee.com/"
+career_page_url = "https://pylotjobs.recruitee.com/"
 title = "Pylot"
 slug = "pylot"
 body = "Simplify the everyday life for entrepreneurs and their small and medium-sized companies with digital solutions. Our entrepreneur's cockpit bundles state of the art software solutions enabling owners to drive their business or to save time from manual processes and routines. With one of our first product business owners increase the overall online visibility of their company and foster customer proximity."

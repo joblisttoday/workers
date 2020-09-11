@@ -1,9 +1,7 @@
 body = "#ecommerce site for #computer #gaming hardware"
 created_at = "2018-02-01T20:53:21.440Z"
 is_approved = true
-carreer_page_url = "https://caseking.recruitee.com/"
-job_board_provider = "recruitee"
-job_board_hostname = "caseking"
+career_page_url = "https://caseking.recruitee.com/"
 latitude = 52.530086
 longitude = 13.312013
 slug = "caseking"

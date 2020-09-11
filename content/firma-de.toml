@@ -1,4 +1,4 @@
-carreer_page_url = "https://firmadeen.recruitee.com"
+career_page_url = "https://firmadeen.recruitee.com"
 title = "Firma"
 slug = "firma"
 body = "Provides a comprehensive, fast and easy company formation service that enables founders to stay business-focused instead of getting lost in legal regulations."

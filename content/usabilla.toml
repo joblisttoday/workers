@@ -1,4 +1,4 @@
-carreer_page_url = "https://usabilla.recruitee.com"
+career_page_url = "https://usabilla.recruitee.com"
 slug = "usabilla"
 title = "Usabilla"
 body = "Help companies get feedback from their users"

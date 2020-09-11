@@ -1,4 +1,4 @@
-carreer_page_url = "https://yaslife-jobs.personio.de"
+career_page_url = "https://yaslife-jobs.personio.de"
 job_board_provider = "personio"
 job_board_hostname = "yaslife-jobs"
 title = "YAS.life"

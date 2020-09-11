@@ -1,4 +1,4 @@
-carreer_page_url = "https://www.shijigroup.com/careers"
+career_page_url = "https://www.shijigroup.com/careers"
 job_board_provider = "smartrecruiters"
 job_board_hostname = "ShijiGroup"
 title = "Shiji Group"

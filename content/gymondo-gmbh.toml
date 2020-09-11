@@ -1,4 +1,4 @@
-carreer_page_url = "https://gymondo-gmbh-jobs.personio.de"
+career_page_url = "https://gymondo-gmbh-jobs.personio.de"
 job_board_provider = "personio"
 job_board_hostname = "gymondo-gmbh-jobs"
 title = "Gymondo"

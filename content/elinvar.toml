@@ -1,7 +1,7 @@
 body = "Digital platform for banks and asset managers. #bank #finance"
 created_at = "2018-01-14T18:35:36.022Z"
 is_approved = true
-carreer_page_url = "https://elinvar.recruitee.com/"
+career_page_url = "https://elinvar.recruitee.com/"
 latitude = 52.53341
 longitude = 13.4240201
 slug = "elinvar"
