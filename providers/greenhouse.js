@@ -2,14 +2,18 @@ const fetch = require('node-fetch')
 
 const providerId = 'greenhouse'
 
+const getLocation = (job) => {
+	return job.offices.map(office => office.location).join('-')
+}
+
 const serializeJobs = (jobs, hostname) => {
 	return jobs.map(job => {
 		return {
-			/* the one needed for algolia */
 			objectID: `${providerId}-${hostname}-${job.id}`,
 			name: job.title,
-			url: `${job.carreers_url}`,
-			publishedDate: job.created_at
+			url: `${job.absolute_url}`,
+			publishedDate: job.updated_at,
+			location: getLocation(job)
 		}
 	})
 }
@@ -19,11 +23,11 @@ const getJobs = async ({
 	city,
 	country
 }) => {
-	let data = null
+	let allJobs = null
 	const url = `https://boards-api.greenhouse.io/v1/boards/${hostname}/jobs?content=true`
 
 	try {
-		data = await fetch(url)
+		allJobs = await fetch(url)
 			.then(res => res.json())
 			.then(data => {
 				let search = ''
@@ -50,7 +54,8 @@ const getJobs = async ({
 		console.log('error fetching jobs')
 	}
 
-	return data
+	const s = serializeJobs(allJobs, hostname)
+	return s
 }
 
 exports.getJobs = getJobs
