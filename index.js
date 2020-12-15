@@ -71,7 +71,7 @@ Promise.all(promises).then(responses => {
 	console.info('Jobs:', allJobs.length)
 
 	if (process.env.NODE_ENV === 'production') {
-		index.saveObjects(allJobs).then(({ objectsIds }) => {
+		index.replaceAllObjects(allJobs).then(({ objectsIds }) => {
  			console.info('algolia save success')
  		}).catch(err => {
  			console.log('algolia save error', err)
