@@ -1,28 +1,45 @@
 const fs = require('fs')
 const TOML = require('@iarna/toml')
+const simpleGit = require('simple-git')
 
-const databaseDir = './content'
+const getCompanies = async () => {
+	const databaseDir = './database'
+	const contentBaseDir = `${databaseDir}/content/companies`
+	const databaseGit = 'https://github.com/joblistcity/companies.git'
 
-const getCompanies = () => {
-	const fileNames = getFileNames()
-	const jsonContent = getFileContents(fileNames).filter(company => {
+	console.log(`Cloning ${databaseGit} to ${databaseDir}`)
+
+	try {
+		await cloneCompaniesGit(databaseDir, databaseGit)
+	} catch (error) {
+		console.log('Error cloning content/companies git repository', error)
+		return
+	}
+
+	const fileNames = getFileNames(contentBaseDir)
+	const jsonContent = getFileContents(contentBaseDir, fileNames).filter(company => {
 		return company.provider && company.hostname
 	})
 	return jsonContent
 }
 
-const getFileNames = () => {
+const cloneCompaniesGit = async (localDir, gitRemote) => {
+	const git = simpleGit()
+	await git.clone(gitRemote, localDir)
+}
+
+const getFileNames = (dir) => {
 	let fileNames = null
 	try {
-    fileNames = fs.readdirSync(databaseDir)
+    fileNames = fs.readdirSync(dir)
 	} catch (err) {
     console.log(err)
 	}
 	return fileNames
 }
 
-const getFileContents = (fileNames) => {
-	const filePaths = fileNames.map(name => `${databaseDir}/${name}`)
+const getFileContents = (dir, fileNames) => {
+	const filePaths = fileNames.map(name => `${dir}/${name}/index.toml`)
 	const fileContents = filePaths.map(path => {
 		let content = null
 		try {

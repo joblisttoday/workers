@@ -2,11 +2,11 @@ const config = require('dotenv').config()
 
 const algoliasearch = require("algoliasearch")
 
-const database = require('./database')
 const recruitee = require('./providers/recruitee')
 const greenhouse = require('./providers/greenhouse')
 const smartrecruiters = require('./providers/smartrecruiters')
 
+const database = require('./database')
 
 /*
 	 algolia config
@@ -45,40 +45,53 @@ const providerMethods = {
 	smartrecruiters: smartrecruiters.getJobs
 }
 const city = 'berlin'
-const companies = database.getCompanies()
 
-const promises = companies.map(company => {
-	const providerMethod = providerMethods[company.provider]
-	if (typeof providerMethod === 'function') {
-		return providerMethod({
-			hostname: company.hostname,
-			companyTitle: company.title
-		})
-	} else {
-		return null
+const init = async () => {
+	let companies
+
+	try {
+		companies = await database.getCompanies()
+	} catch (error) {
+		console.log('Error getting companies from local folder', error)
+		return
 	}
-})
 
-Promise.all(promises).then(responses => {
-	let allJobs = []
-
-	responses.filter(res => res).forEach(jobs => {
-		jobs.forEach(job => {
-			allJobs.push(job)
-		})
+	const promises = companies.map(company => {
+		const providerMethod = providerMethods[company.provider]
+		if (typeof providerMethod === 'function') {
+			return providerMethod({
+				hostname: company.hostname,
+				companyTitle: company.title
+			})
+		} else {
+			return null
+		}
 	})
 
-	console.info('Jobs:', allJobs.length)
+	Promise.all(promises).then(responses => {
+		let allJobs = []
+		responses.filter(res => res).forEach(jobs => {
+			jobs.forEach(job => {
+				allJobs.push(job)
+			})
+		})
 
-	if (process.env.NODE_ENV === 'production') {
-		index.replaceAllObjects(allJobs).then(({ objectsIds }) => {
- 			console.info('algolia save success')
- 		}).catch(err => {
- 			console.log('algolia save error', err)
- 		})
-	} else {
-		console.info('Dev: algolia upload has been skipped')
-	}
-}).catch(err => {
-	console.error(err)
-})
+		console.info('Jobs:', allJobs.length)
+
+		if (process.env.NODE_ENV === 'production') {
+			index.replaceAllObjects(allJobs).then(({ objectsIds }) => {
+ 				console.info('algolia save success')
+ 			}).catch(err => {
+ 				console.log('algolia save error', err)
+ 			})
+		} else {
+			console.info('Dev: algolia upload has been skipped')
+		}
+	}).catch(err => {
+		console.error(err)
+	})
+
+}
+
+/* launch the script */
+init()
