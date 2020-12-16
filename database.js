@@ -4,7 +4,7 @@ const simpleGit = require('simple-git')
 
 const getCompanies = async () => {
 	const databaseDir = './database'
-	const contentBaseDir = `${databaseDir}/content/companies`
+	const contentBaseDir = `${databaseDir}/companies`
 	const databaseGit = 'https://github.com/joblistcity/companies.git'
 
 	console.log(`Cloning ${databaseGit} to ${databaseDir}`)
