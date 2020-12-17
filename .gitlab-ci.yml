@@ -6,13 +6,13 @@ algolia_jobs:on-schedule:
     - npm install
     - npm run algolia-jobs
 
-companies_api:on-schedule:
+api_companies:on-schedule:
   image: node:latest
   only:
     - schedules
   script:
     - npm install
-    - npm run companies-api
+    - npm run api-companies
   artifacts:
     paths:
     - public

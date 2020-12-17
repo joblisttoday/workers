@@ -58,3 +58,9 @@ The company key `job_board_provider` is one of those listed at `./providers` (wi
 
 Any *job_board_provider* with an open API can be implemented. Private
 API keys could still be used in the Gitlab-ci context.
+
+## Notes
+
+```
+curl -sS "https://<url>/<namespace>/<project>/-/jobs/artifacts/<refs>/download?job=<job_name>
+```
