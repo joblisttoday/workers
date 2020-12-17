@@ -2,30 +2,39 @@ const fs = require('fs')
 const TOML = require('@iarna/toml')
 const simpleGit = require('simple-git')
 
-const getCompanies = async () => {
-	const databaseDir = './database'
-	const contentBaseDir = `${databaseDir}/companies`
-	const databaseGit = 'https://github.com/joblistcity/companies.git'
+const databaseGit = 'https://github.com/joblistcity/companies.git'
+const databaseDir = './.db'
+const databaseDirCompanies = `${databaseDir}/companies`
 
-	console.log(`Cloning ${databaseGit} to ${databaseDir}`)
-
-	try {
-		await cloneCompaniesGit(databaseDir, databaseGit)
-	} catch (error) {
-		console.log('Error cloning content/companies git repository', error)
-		return
-	}
-
-	const fileNames = getFileNames(contentBaseDir)
-	const jsonContent = getFileContents(contentBaseDir, fileNames).filter(company => {
-		return company.provider && company.hostname
+const getAllCompaniesWithProvider = async () => {
+	const fileNames = getFileNames(databaseDirCompanies)
+	const jsonContent = getFileContents(databaseDirCompanies, fileNames).filter(company => {
+		return company.job_board_provider && company.job_board_hostname
 	})
 	return jsonContent
 }
 
-const cloneCompaniesGit = async (localDir, gitRemote) => {
-	const git = simpleGit()
-	await git.clone(gitRemote, localDir)
+const getAllCompanies = async () => {
+	const fileNames = getFileNames(databaseDirCompanies)
+	const jsonContent = getFileContents(databaseDirCompanies, fileNames)
+	return jsonContent
+}
+
+const cloneDatabase = async () => {
+	try {
+    fs.rmdirSync(databaseDir, { recursive: true })
+    console.log(`${databaseDir} is deleted!`)
+	} catch (error) {
+    console.error(`Error while deleting ${databaseDir}`, error)
+	}
+
+	try {
+		const git = simpleGit()
+		await git.clone(databaseGit, databaseDir)
+	} catch (error) {
+		console.log('Error cloning content/companies git repository', error)
+		return
+	}
 }
 
 const getFileNames = (dir) => {
@@ -63,10 +72,29 @@ const getFileContents = (dir, fileNames) => {
 
 const serializeJson = (item) => {
 	return {
-		provider: item['job_board_provider'],
-		hostname: item['job_board_hostname'],
-		title: item.title
+		address: item['address'],
+		body: item['body'],
+		city: item['city'],
+		company_url: item['company_url'],
+		country: item['country'],
+		created_at: item['created_at'],
+		job_board_hostname: item['job_board_hostname'],
+		job_board_provider: item['job_board_provider'],
+		job_board_url: item['job_board_url'],
+		latitude: item['latitude'],
+		longitude: item['longitude'],
+		postal_code: item['postal_code'],
+		slug: item['slug'],
+		tags: item['tags'],
+		title: item['title'],
+		twitter_url: item['twitter_url'],
+		linkedin_url: item['linkedin_url'],
+		facebook_url: item['facebook_url'],
+		instagram_url: item['instagram_url'],
+		updated_at: item['updated_at']
 	}
 }
 
-exports.getCompanies = getCompanies
+exports.cloneDatabase = cloneDatabase
+exports.getAllCompanies = getAllCompanies
+exports.getAllCompaniesWithProvider = getAllCompaniesWithProvider

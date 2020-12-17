@@ -1,3 +1,11 @@
+# js modules
 node_modules/
-database/
+
+# the cloned repo used as db
+.db/
+
+# the artifacts for gitlab ci
+.public/
+
+# the file with the keys
 .env

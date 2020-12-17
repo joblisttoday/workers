@@ -47,20 +47,26 @@ const providerMethods = {
 const city = 'berlin'
 
 const init = async () => {
-	let companies
-
 	try {
-		companies = await database.getCompanies()
+		await database.cloneDatabase()
+	} catch (error) {
+		console.log('Error cloning new database', error)
+		return
+	}
+
+	let companies
+	try {
+		companies = await database.getAllCompaniesWithProvider()
 	} catch (error) {
 		console.log('Error getting companies from local folder', error)
 		return
 	}
 
 	const promises = companies.map(company => {
-		const providerMethod = providerMethods[company.provider]
+		const providerMethod = providerMethods[company['job_board_provider']]
 		if (typeof providerMethod === 'function') {
 			return providerMethod({
-				hostname: company.hostname,
+				hostname: company['job_board_hostname'],
 				companyTitle: company.title
 			})
 		} else {
