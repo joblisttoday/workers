@@ -5,7 +5,9 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "node index.js"
+    "start": "node index.js",
+    "algolia-jobs": "node algolia-jobs.js",
+    "api-companies": "node api-companies.js"
   },
   "repository": {
     "type": "git",

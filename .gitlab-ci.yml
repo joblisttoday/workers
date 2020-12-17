@@ -4,4 +4,12 @@ algolia-jobs:on-schedule:
     - schedules
   script:
     - npm install
+    - npm run algolia-jobs
+
+algolia-jobs:on-schedule:
+  image: node:latest
+  only:
+    - schedules
+  script:
+    - npm install
     - npm run start
