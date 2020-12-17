@@ -1,5 +1,5 @@
 const fs = require('fs')
-const TOML = require('@iarna/toml')
+const frontmatter = require('@github-docs/frontmatter')
 const simpleGit = require('simple-git')
 
 const databaseGit = 'https://github.com/joblistcity/companies.git'
@@ -48,7 +48,8 @@ const getFileNames = (dir) => {
 }
 
 const getFileContents = (dir, fileNames) => {
-	const filePaths = fileNames.map(name => `${dir}/${name}/index.toml`)
+	const extension = 'md'
+	const filePaths = fileNames.map(name => `${dir}/${name}/index.${extension}`)
 	const fileContents = filePaths.map(path => {
 		let content = null
 		try {
@@ -57,14 +58,9 @@ const getFileContents = (dir, fileNames) => {
 			console.error('Error reading files', err)
 		}
 
-		let jsonContent = null
-		try {
-			jsonContent= TOML.parse(content)
-		} catch (err) {
-			console.error('Error reading files', path, err)
-		}
+		let frontMatter = frontmatter(content)
+		return serializeJson(frontMatter)
 
-		return serializeJson(jsonContent)
 	})
 
 	return fileContents
@@ -72,26 +68,26 @@ const getFileContents = (dir, fileNames) => {
 
 const serializeJson = (item) => {
 	return {
-		address: item['address'],
-		body: item['body'],
-		city: item['city'],
-		company_url: item['company_url'],
-		country: item['country'],
-		created_at: item['created_at'],
-		job_board_hostname: item['job_board_hostname'],
-		job_board_provider: item['job_board_provider'],
-		job_board_url: item['job_board_url'],
-		latitude: item['latitude'],
-		longitude: item['longitude'],
-		postal_code: item['postal_code'],
-		slug: item['slug'],
-		tags: item['tags'],
-		title: item['title'],
-		twitter_url: item['twitter_url'],
-		linkedin_url: item['linkedin_url'],
-		facebook_url: item['facebook_url'],
-		instagram_url: item['instagram_url'],
-		updated_at: item['updated_at']
+		address: item.data['address'],
+		body: item.data['body'],
+		city: item.data['city'],
+		company_url: item.data['company_url'],
+		country: item.data['country'],
+		created_at: item.data['created_at'],
+		job_board_hostname: item.data['job_board_hostname'],
+		job_board_provider: item.data['job_board_provider'],
+		job_board_url: item.data['job_board_url'],
+		latitude: item.data['latitude'],
+		longitude: item.data['longitude'],
+		postal_code: item.data['postal_code'],
+		slug: item.data['slug'],
+		tags: item.data['tags'],
+		title: item.data['title'],
+		twitter_url: item.data['twitter_url'],
+		linkedin_url: item.data['linkedin_url'],
+		facebook_url: item.data['facebook_url'],
+		instagram_url: item.data['instagram_url'],
+		updated_at: item.data['updated_at']
 	}
 }
 

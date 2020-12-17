@@ -6,6 +6,13 @@ const init = async () => {
 	const dirArtifacts = './public'
 	const fileName = 'companies.json'
 
+	try {
+		await database.cloneDatabase()
+	} catch (error) {
+		console.log('Error cloning new database', error)
+		return
+	}
+
 	let companies
 	try {
 		companies = await database.getAllCompanies()
