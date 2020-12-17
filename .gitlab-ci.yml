@@ -1,4 +1,4 @@
-algolia-jobs:on-schedule:
+algolia_jobs:on-schedule:
   image: node:latest
   only:
     - schedules
@@ -6,7 +6,7 @@ algolia-jobs:on-schedule:
     - npm install
     - npm run algolia-jobs
 
-companies-api:on-schedule:
+companies_api:on-schedule:
   image: node:latest
   only:
     - schedules
