@@ -1,11 +1,11 @@
 # workers for joblist.city
 
 The **workers**:
-- clone a list of companies, stored as a git repostiry: [github/joblistcity/companies](https://github.com/joblistcity/companies) repository
+- clone a list of companies, stored as a git repostiry: [github/joblistcity/companies](https://github.com/joblistcity/companies)
 - fetch all available job positions from every companies by talking with job-boards providers APIS
 - job-board providers implemented are: `greenhouse`, `recruitee`, `smartrecruiters`
-- uploads the normalized data to populate an algolia search index.
-- This data is then made available to be searched on [joblist.city](https://joblist.city), etc.
+- uploads the normalized data to populate an algolia search index
+- jobs data is searchable on [joblist.city](https://joblist.city), etc.
 
 ## Deployment
 
