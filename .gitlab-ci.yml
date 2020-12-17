@@ -13,3 +13,6 @@ companies_api:on-schedule:
   script:
     - npm install
     - npm run companies-api
+  artifacts:
+    paths:
+    - public

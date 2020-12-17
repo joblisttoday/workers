@@ -2,7 +2,8 @@ const fs = require('fs')
 const database = require('./database')
 
 const init = async () => {
-	const dirArtifacts = './.public'
+	/* based on gitlab artifact strategy */
+	const dirArtifacts = './public'
 	const fileName = 'companies.json'
 
 	let companies
