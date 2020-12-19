@@ -42,7 +42,7 @@ const saveNewCompanies = async (companies) => {
 
 	const operations = companies.map(company => {
 		if (!company.slug) {
-			console.log(company.title)
+			console.log('No slug for', company.title)
 		}
 		const fileData = frontmatter.stringify('', company)
 		const folderPath = `${dirNewCompanies}/${company.slug}`
