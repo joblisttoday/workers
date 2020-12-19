@@ -124,25 +124,21 @@ const getFileContents = (dir, fileNames) => {
 
 const serializeJson = (item) => {
 	return {
-		address: item.data['address'],
-		body: item.data['body'],
-		city: item.data['city'],
-		company_url: item.data['company_url'],
-		country: item.data['country'],
-		created_at: item.data['created_at'],
-		job_board_hostname: item.data['job_board_hostname'],
-		job_board_provider: item.data['job_board_provider'],
-		job_board_url: item.data['job_board_url'],
-		latitude: item.data['latitude'],
-		longitude: item.data['longitude'],
-		postal_code: item.data['postal_code'],
-		slug: item.data['slug'],
-		tags: item.data['tags'],
 		title: item.data['title'],
+		slug: item.data['slug'],
+		description: item.data['description'],
+		tags: item.data['tags'],
+		company_url: item.data['company_url'],
+		job_board_provider: item.data['job_board_provider'],
+		job_board_hostname: item.data['job_board_hostname'],
+		job_board_url: item.data['job_board_url'],
 		twitter_url: item.data['twitter_url'],
 		linkedin_url: item.data['linkedin_url'],
-		facebook_url: item.data['facebook_url'],
 		instagram_url: item.data['instagram_url'],
+		facebook_url: item.data['facebook_url'],
+		cities: item.data['cities'],
+		positions: item.data['positions'],
+		created_at: item.data['created_at'],
 		updated_at: item.data['updated_at']
 	}
 }

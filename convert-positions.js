@@ -18,7 +18,7 @@ const init = async () => {
 		return
 	}
 
-	const sCompanies = companies.map(serializeComapany)
+	const sCompanies = companies.map(serializeCompany)
 
 	try {
 		await database.saveNewCompanies(sCompanies)
@@ -28,12 +28,12 @@ const init = async () => {
 	}
 }
 
-const serializeComapany = (company) => {
+const serializeCompany = (company) => {
 	/* originla data */
 	const {
 		title,
 		slug,
-		body,
+		description,
 		tags,
 		company_url,
 		job_board_provider,
@@ -43,55 +43,22 @@ const serializeComapany = (company) => {
 		linkedin_url,
 		instagram_url,
 		facebook_url,
-		country,
 		cities,
-		postal_code,
-		address,
-		latitude,
-		longitude,
+		positions,
 		created_at,
 		updated_at,
 	} = company
 
-	/* build positions */
-	let position = {}
-	if (cities && cities.length) {
-		position['city'] = cities[0]
-	}
-	if (country) {
-		position['country'] = country
-	}
-
-	if (postal_code) {
-		position['postal_code'] = postal_code
-	}
-
-	if (address) {
-		position['address'] = address
-	}
-
-	if (longitude && latitude) {
-		position['position'] = JSON.stringify({
-			type: 'Point',
-			coordinates: [longitude, latitude]
-		})
-	}
-
-	let positions
-	if (Object.keys(position).length) {
-		positions = [position]
-	}
-
 	/* company data */
 	const sCompany = {}
 	if (title) {
-			sCompany['title'] = title
+		sCompany['title'] = title
 	}
 	if (slug) {
 		sCompany['slug'] = slug
 	}
-	if (body) {
-		sCompany['body'] = body
+	if (description) {
+		sCompany['description'] = description
 	}
 	if (tags && tags.length) {
 		sCompany['tags'] = tags
@@ -120,17 +87,19 @@ const serializeComapany = (company) => {
 	if (facebook_url) {
 		sCompany['facebook_url'] = facebook_url
 	}
-	if (cities) {
-		sCompany['cities'] = cities
-	}
-	if (positions && positions.length) {
-		sCompany['positions'] = positions
-	}
 	if (created_at) {
 		sCompany['created_at'] = created_at
 	}
 	if (updated_at) {
 		sCompany['updated_at'] = updated_at
+	}
+	if (cities) {
+		sCompany['cities'] = cities
+	} else {
+		sCompany['cities'] = ['berlin']
+	}
+	if (positions && positions.length) {
+		sCompany['positions'] = positions
 	}
 
 	return sCompany
