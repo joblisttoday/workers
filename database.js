@@ -1,10 +1,13 @@
 const fs = require('fs')
+const fsPromises = require('fs/promises')
 const frontmatter = require('@github-docs/frontmatter')
 const simpleGit = require('simple-git')
 
 const databaseGit = 'https://github.com/joblistcity/companies.git'
 const databaseDir = './.db'
 const databaseDirCompanies = `${databaseDir}/companies`
+const fileExtension = 'md'
+
 
 const getAllCompaniesWithProvider = async () => {
 	const fileNames = getFileNames(databaseDirCompanies)
@@ -18,6 +21,60 @@ const getAllCompanies = async () => {
 	const fileNames = getFileNames(databaseDirCompanies)
 	const jsonContent = getFileContents(databaseDirCompanies, fileNames)
 	return jsonContent
+}
+
+const saveNewCompanies = async (companies) => {
+	const dirNewCompanies = `${databaseDir}/companies-new`
+
+	try {
+    await fsPromises.rmdir(dirNewCompanies, { recursive: true })
+    console.log(`${dirNewCompanies} is deleted`)
+	} catch (error) {
+    console.error(`Error while deleting ${dirNewCompanies}`, error)
+	}
+
+	try {
+    await fsPromises.mkdir(dirNewCompanies)
+    console.log(`${dirNewCompanies} is created`)
+	} catch (error) {
+    console.error(`Error while creating ${dirNewCompanies}`, error)
+	}
+
+	const operations = companies.map(company => {
+		if (!company.slug) {
+			console.log(company.title)
+		}
+		const fileData = frontmatter.stringify('', company)
+		const folderPath = `${dirNewCompanies}/${company.slug}`
+		const filePath = `${folderPath}/index.${fileExtension}`
+		return {
+			folderPath,
+			filePath,
+			fileData
+		}
+	})
+
+	const operationPromises = operations.map(operation => {
+		const {folderPath, filePath, fileData} = operation
+		return fsPromises.mkdir(folderPath).then(() => {
+			return fsPromises.writeFile(filePath, fileData)
+		})
+	})
+
+	try {
+		await Promise.all(operationPromises)
+	} catch (error) {
+		console.log('Error while saving new companies files to disk', error)
+		return
+	}
+	console.log('Wrote new companies')
+
+	const oldCompanies = await getAllCompanies()
+
+	console.log('Stats: ', {
+		'companies': companies.length,
+		'oldCompanies': oldCompanies.length
+	})
 }
 
 const cloneDatabase = async () => {
@@ -48,8 +105,7 @@ const getFileNames = (dir) => {
 }
 
 const getFileContents = (dir, fileNames) => {
-	const extension = 'md'
-	const filePaths = fileNames.map(name => `${dir}/${name}/index.${extension}`)
+	const filePaths = fileNames.map(name => `${dir}/${name}/index.${fileExtension}`)
 	const fileContents = filePaths.map(path => {
 		let content = null
 		try {
@@ -94,3 +150,4 @@ const serializeJson = (item) => {
 exports.cloneDatabase = cloneDatabase
 exports.getAllCompanies = getAllCompanies
 exports.getAllCompaniesWithProvider = getAllCompaniesWithProvider
+exports.saveNewCompanies = saveNewCompanies
