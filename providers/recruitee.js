@@ -24,9 +24,13 @@ const getJobs = async ({
 }) => {
 	let data
 	const url = `https://${hostname}.recruitee.com/api/offers`
+	const options = {
+		method: 'GET',
+		headers: {Accept: 'application/json', 'Content-Type': 'application/json'}
+	};
 
 	try {
-		data = await fetch(url)
+		data = await fetch(url, options)
 			.then(res => {
 				if (res.url === url) {
 					return res.json()
