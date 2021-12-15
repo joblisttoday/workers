@@ -3,7 +3,7 @@ const fsPromises = require('fs/promises')
 const frontmatter = require('@github-docs/frontmatter')
 const simpleGit = require('simple-git')
 
-const databaseGit = 'https://github.com/joblistcity/companies.git'
+const databaseGit = 'https://github.com/joblisttoday/companies.git'
 const databaseDir = './.db'
 const databaseDirCompanies = `${databaseDir}/companies`
 const fileExtension = 'md'
