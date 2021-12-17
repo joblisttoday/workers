@@ -44,7 +44,6 @@ const providerMethods = {
 	greenhouse: greenhouse.getJobs,
 	smartrecruiters: smartrecruiters.getJobs
 }
-const city = 'berlin'
 
 const init = async () => {
 	try {

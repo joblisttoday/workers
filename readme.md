@@ -21,7 +21,7 @@ That way, jobs will be fetched for all companies, and an algolia index populated
 
 ## Job board providers
 
-The possible **values** of the **key** `company.job_board_provider`, is one of those listed at `./providers` (filename, without the .js extension).
+The possible **values** of the **key** `company.job_board_provider`, is one of those listed at `./src/providers` (filename, without the .js extension).
 
 > Any `job_board_provider` with an open API can be implemented. Private API keys could still be used in the Gitlab-ci context.
 

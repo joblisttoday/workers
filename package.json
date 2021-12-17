@@ -2,13 +2,13 @@
   "name": "joblist-city-workers",
   "version": "0.0.1",
   "description": "Workers for joblist.city, fetching jobs from job-board-providers APIs",
-  "main": "index.js",
+  "main": "src/index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "node index.js",
-    "algolia-jobs": "node algolia-jobs.js",
-    "api-companies": "node api-companies.js",
-    "convert-positions": "node convert-positions.js"
+    "algolia-jobs": "node src/algolia-jobs.js",
+    "api-companies": "node src/api-companies.js",
+    "convert-positions": "node src/convert-positions.js"
   },
   "repository": {
     "type": "git",
