@@ -1,4 +1,4 @@
-const fetch = require('node-fetch')
+import fetch from 'node-fetch'
 
 const providerId = 'recruitee'
 
@@ -56,4 +56,6 @@ const getJobs = async ({
 	}
 }
 
-exports.getJobs = getJobs
+export default {
+	getJobs
+}

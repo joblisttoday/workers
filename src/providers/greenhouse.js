@@ -1,4 +1,4 @@
-const fetch = require('node-fetch')
+import fetch from 'node-fetch'
 
 const providerId = 'greenhouse'
 
@@ -67,4 +67,6 @@ const getJobs = async ({
 	return s
 }
 
-exports.getJobs = getJobs
+export default {
+	getJobs
+}

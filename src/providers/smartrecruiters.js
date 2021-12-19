@@ -1,4 +1,4 @@
-const fetch = require('node-fetch')
+import fetch from 'node-fetch'
 
 /*
 	 docs:
@@ -48,4 +48,6 @@ const getJobs = async ({
 	return serializeJobs(jobs, hostname, companyTitle)
 }
 
-exports.getJobs = getJobs
+export default {
+	getJobs
+}

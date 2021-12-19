@@ -1,13 +1,13 @@
-const config = require('dotenv').config()
+import dotenv from 'dotenv'
+import algoliasearch from 'algoliasearch'
 
-const algoliasearch = require("algoliasearch")
+import recruitee from './providers/recruitee.js'
+import greenhouse from './providers/greenhouse.js'
+import smartrecruiters from './providers/smartrecruiters.js'
 
-const recruitee = require('./providers/recruitee')
-const greenhouse = require('./providers/greenhouse')
-const smartrecruiters = require('./providers/smartrecruiters')
+import database from './database.js'
 
-const database = require('./database')
-
+const config = dotenv.config()
 /*
 	 algolia config
  */
@@ -26,11 +26,6 @@ if (process.env.NODE_ENV === 'production') {
 	algoliaApiKey = config.parsed['ALGOLIA_DEV_ADMIN_API_KEY']
 }
 
-if (!algoliaAppId || !algoliaApiKey || !indexName) {
-	console.log('Required algoliaAppId && algoliaApiKey && indexName')
-	return
-}
-
 const client = algoliasearch(algoliaAppId, algoliaApiKey)
 const index = client.initIndex(indexName)
 
@@ -46,6 +41,11 @@ const providerMethods = {
 }
 
 const init = async () => {
+	if (!algoliaAppId || !algoliaApiKey || !indexName) {
+		console.log('Required algoliaAppId && algoliaApiKey && indexName')
+		return false
+	}
+
 	try {
 		await database.cloneDatabase()
 	} catch (error) {
@@ -85,18 +85,16 @@ const init = async () => {
 
 		if (process.env.NODE_ENV === 'production') {
 			index.replaceAllObjects(allJobs).then(({ objectsIds }) => {
- 				console.info('algolia save success')
- 			}).catch(err => {
- 				console.log('algolia save error', err)
- 			})
+				console.info('algolia save success')
+			}).catch(err => {
+				console.log('algolia save error', err)
+			})
 		} else {
 			console.info('Dev: algolia upload has been skipped')
 		}
 	}).catch(err => {
 		console.error(err)
 	})
-
 }
 
-/* launch the script */
-init()
+export default init
