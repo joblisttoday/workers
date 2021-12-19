@@ -1,9 +1,18 @@
 import dotenv from 'dotenv'
 import algoliasearch from 'algoliasearch'
 
-import recruitee from './providers/recruitee.js'
-import greenhouse from './providers/greenhouse.js'
-import smartrecruiters from './providers/smartrecruiters.js'
+import {
+	getJobs as recruiteeGetJobs
+} from '@joblist/job-board-providers/src/apis/recruitee.js'
+import {
+	getJobs as greenhouseGetJobs
+} from '@joblist/job-board-providers/src/apis/greenhouse.js'
+import {
+	getJobs as personioGetJobs
+} from '@joblist/job-board-providers/src/apis/personio.js'
+import {
+	getJobs as smartrecruitersGetJobs
+} from '@joblist/job-board-providers/src/apis/smartrecruiters.js'
 
 import database from './database.js'
 
@@ -35,9 +44,9 @@ const index = client.initIndex(indexName)
  */
 
 const providerMethods = {
-	recruitee: recruitee.getJobs,
-	greenhouse: greenhouse.getJobs,
-	smartrecruiters: smartrecruiters.getJobs
+	recruitee: recruiteeGetJobs,
+	greenhouse: greenhouseGetJobs,
+	smartrecruiters: smartrecruitersGetJobs
 }
 
 const init = async () => {
