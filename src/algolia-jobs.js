@@ -1,13 +1,25 @@
-const config = require('dotenv').config()
+import './utils/fetch-polyfill.js'
+import './utils/domparser-polyfill.js'
 
-const algoliasearch = require("algoliasearch")
+import dotenv from 'dotenv'
+import algoliasearch from 'algoliasearch'
 
-const recruitee = require('./providers/recruitee')
-const greenhouse = require('./providers/greenhouse')
-const smartrecruiters = require('./providers/smartrecruiters')
+import {
+	getJobs as recruiteeGetJobs
+} from '@joblist/job-board-providers/src/apis/recruitee.js'
+import {
+	getJobs as greenhouseGetJobs
+} from '@joblist/job-board-providers/src/apis/greenhouse.js'
+import {
+	getJobs as personioGetJobs
+} from '@joblist/job-board-providers/src/apis/personio.js'
+import {
+	getJobs as smartrecruitersGetJobs
+} from '@joblist/job-board-providers/src/apis/smartrecruiters.js'
 
-const database = require('./database')
+import database from './database.js'
 
+const config = dotenv.config()
 /*
 	 algolia config
  */
@@ -26,11 +38,6 @@ if (process.env.NODE_ENV === 'production') {
 	algoliaApiKey = config.parsed['ALGOLIA_DEV_ADMIN_API_KEY']
 }
 
-if (!algoliaAppId || !algoliaApiKey || !indexName) {
-	console.log('Required algoliaAppId && algoliaApiKey && indexName')
-	return
-}
-
 const client = algoliasearch(algoliaAppId, algoliaApiKey)
 const index = client.initIndex(indexName)
 
@@ -40,12 +47,18 @@ const index = client.initIndex(indexName)
  */
 
 const providerMethods = {
-	recruitee: recruitee.getJobs,
-	greenhouse: greenhouse.getJobs,
-	smartrecruiters: smartrecruiters.getJobs
+	recruitee: recruiteeGetJobs,
+	greenhouse: greenhouseGetJobs,
+	smartrecruiters: smartrecruitersGetJobs,
+	personio: personioGetJobs
 }
 
 const init = async () => {
+	if (!algoliaAppId || !algoliaApiKey || !indexName) {
+		console.log('Required algoliaAppId && algoliaApiKey && indexName')
+		return false
+	}
+
 	try {
 		await database.cloneDatabase()
 	} catch (error) {
@@ -85,18 +98,18 @@ const init = async () => {
 
 		if (process.env.NODE_ENV === 'production') {
 			index.replaceAllObjects(allJobs).then(({ objectsIds }) => {
- 				console.info('algolia save success')
- 			}).catch(err => {
- 				console.log('algolia save error', err)
- 			})
+				console.info('algolia save success')
+			}).catch(err => {
+				console.log('algolia save error', err)
+			})
 		} else {
 			console.info('Dev: algolia upload has been skipped')
 		}
 	}).catch(err => {
 		console.error(err)
 	})
-
 }
 
-/* launch the script */
 init()
+
+export default init

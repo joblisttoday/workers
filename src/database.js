@@ -1,7 +1,17 @@
-const fs = require('fs')
-const fsPromises = require('fs/promises')
-const frontmatter = require('@github-docs/frontmatter')
-const simpleGit = require('simple-git')
+import {
+	readdirSync,
+	readFileSync,
+	rmdirSync
+} from 'fs'
+
+import {
+	writeFile,
+	mkdir,
+	rm,
+} from 'fs/promises'
+
+import simpleGit from 'simple-git'
+import matter from 'gray-matter';
 
 const databaseGit = 'https://github.com/joblisttoday/companies.git'
 const databaseDir = './.db'
@@ -27,14 +37,14 @@ const saveNewCompanies = async (companies) => {
 	const dirNewCompanies = `${databaseDir}/companies-new`
 
 	try {
-    await fsPromises.rmdir(dirNewCompanies, { recursive: true })
+    await rm(dirNewCompanies, { recursive: true })
     console.log(`${dirNewCompanies} is deleted`)
 	} catch (error) {
     console.error(`Error while deleting ${dirNewCompanies}`, error)
 	}
 
 	try {
-    await fsPromises.mkdir(dirNewCompanies)
+    await mkdir(dirNewCompanies)
     console.log(`${dirNewCompanies} is created`)
 	} catch (error) {
     console.error(`Error while creating ${dirNewCompanies}`, error)
@@ -44,7 +54,7 @@ const saveNewCompanies = async (companies) => {
 		if (!company.slug) {
 			console.log('No slug for', company.title)
 		}
-		const fileData = frontmatter.stringify('', company)
+		const fileData = matter.stringify('', company)
 		const folderPath = `${dirNewCompanies}/${company.slug}`
 		const filePath = `${folderPath}/index.${fileExtension}`
 		return {
@@ -56,8 +66,8 @@ const saveNewCompanies = async (companies) => {
 
 	const operationPromises = operations.map(operation => {
 		const {folderPath, filePath, fileData} = operation
-		return fsPromises.mkdir(folderPath).then(() => {
-			return fsPromises.writeFile(filePath, fileData)
+		return mkdir(folderPath).then(() => {
+			return writeFile(filePath, fileData)
 		})
 	})
 
@@ -79,7 +89,7 @@ const saveNewCompanies = async (companies) => {
 
 const cloneDatabase = async () => {
 	try {
-    fs.rmdirSync(databaseDir, { recursive: true })
+    rmdirSync(databaseDir, { recursive: true })
     console.log(`${databaseDir} is deleted!`)
 	} catch (error) {
     console.error(`Error while deleting ${databaseDir}`, error)
@@ -97,7 +107,7 @@ const cloneDatabase = async () => {
 const getFileNames = (dir) => {
 	let fileNames = null
 	try {
-    fileNames = fs.readdirSync(dir)
+    fileNames = readdirSync(dir)
 	} catch (err) {
     console.log(err)
 	}
@@ -109,12 +119,12 @@ const getFileContents = (dir, fileNames) => {
 	const fileContents = filePaths.map(path => {
 		let content = null
 		try {
-			content = fs.readFileSync(path, 'utf-8')
+			content = readFileSync(path, 'utf-8')
 		} catch (err) {
 			console.error('Error reading files', err)
 		}
 
-		let frontMatter = frontmatter(content)
+		let frontMatter = matter(content)
 		return serializeJson(frontMatter)
 
 	})
@@ -143,7 +153,9 @@ const serializeJson = (item) => {
 	}
 }
 
-exports.cloneDatabase = cloneDatabase
-exports.getAllCompanies = getAllCompanies
-exports.getAllCompaniesWithProvider = getAllCompaniesWithProvider
-exports.saveNewCompanies = saveNewCompanies
+export default {
+	cloneDatabase,
+	getAllCompanies,
+	getAllCompaniesWithProvider,
+	saveNewCompanies
+}

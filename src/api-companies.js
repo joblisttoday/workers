@@ -1,5 +1,10 @@
-const fs = require('fs')
-const database = require('./database')
+import {
+	writeFile,
+	mkdirSync,
+	existsSync
+} from 'fs'
+
+import database from './database.js'
 
 const init = async () => {
 	/* based on gitlab artifact strategy */
@@ -23,16 +28,20 @@ const init = async () => {
 
 	let companiesJSONString = JSON.stringify(companies)
 
-	if (!fs.existsSync(dirArtifacts)){
-    fs.mkdirSync(dirArtifacts)
+	if (!existsSync(dirArtifacts)){
+    mkdirSync(dirArtifacts)
 	}
 
-	fs.writeFile(`${dirArtifacts}/${fileName}`, companiesJSONString, 'utf8', (error) => {
-    if (error) {
-      console.log(`Error writing companies file: ${error}`)
-    } else {
-      console.log(`Wrote file at ${dirArtifacts}/${fileName} with ${companies.length} companies`)
-    }
+	writeFile(
+		`${dirArtifacts}/${fileName}`,
+		companiesJSONString,
+		'utf8',
+		(error) => {
+			if (error) {
+				console.log(`Error writing companies file: ${error}`)
+			} else {
+				console.log(`Wrote file at ${dirArtifacts}/${fileName} with ${companies.length} companies`)
+			}
 	})
 }
 

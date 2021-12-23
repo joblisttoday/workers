@@ -1,6 +1,4 @@
-const frontmatter = require('@github-docs/frontmatter')
-const database = require('./database')
-
+import database from './database.js'
 
 const init = async () => {
 	try {
