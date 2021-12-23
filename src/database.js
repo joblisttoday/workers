@@ -37,7 +37,7 @@ const saveNewCompanies = async (companies) => {
 	const dirNewCompanies = `${databaseDir}/companies-new`
 
 	try {
-    await rm(dirNewCompanies, { recursive: true })
+    await rm(dirNewCompanies, { recursive: true, force: true })
     console.log(`${dirNewCompanies} is deleted`)
 	} catch (error) {
     console.error(`Error while deleting ${dirNewCompanies}`, error)
