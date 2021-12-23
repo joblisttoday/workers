@@ -20,6 +20,7 @@ import {
 import database from './database.js'
 
 const config = dotenv.config()
+
 /*
 	 algolia config
  */
@@ -41,7 +42,6 @@ if (process.env.NODE_ENV === 'production') {
 const client = algoliasearch(algoliaAppId, algoliaApiKey)
 const index = client.initIndex(indexName)
 
-
 /*
 	 test the providers
  */
@@ -54,8 +54,16 @@ const providerMethods = {
 }
 
 const init = async () => {
+	console.info({
+		message: 'Initiating script',
+		NODE_ENV: process.env.NODE_ENV,
+		algoliaIndexName: indexName,
+		algoliaAppId: !!algoliaAppId,
+		algoliaApiKey: !!algoliaApiKey
+	})
+
 	if (!algoliaAppId || !algoliaApiKey || !indexName) {
-		console.log('Required algoliaAppId && algoliaApiKey && indexName')
+		console.log('Missing required algoliaAppId && algoliaApiKey && indexName')
 		return false
 	}
 
@@ -74,19 +82,26 @@ const init = async () => {
 		return
 	}
 
-	const promises = companies.map(company => {
-		const providerMethod = providerMethods[company['job_board_provider']]
-		if (typeof providerMethod === 'function') {
-			return providerMethod({
+	const allCompaniesGetJobs = companies.map(company => {
+		const providerGetJobs = providerMethods[company['job_board_provider']]
+		if (typeof providerGetJobs === 'function') {
+			return providerGetJobs({
 				hostname: company['job_board_hostname'],
 				companyTitle: company.title
 			})
 		} else {
+			console.info({
+				message: 'Unkown provider',
+				company: company.slug,
+				provider: company['job_board_provider']
+			})
 			return null
 		}
 	})
 
-	Promise.all(promises).then(responses => {
+	const companiesGetJobs = allCompaniesGetJobs.filter(company => company)
+
+	Promise.all(companiesGetJobs).then(responses => {
 		let allJobs = []
 		responses.filter(res => res).forEach(jobs => {
 			jobs.forEach(job => {
@@ -94,17 +109,26 @@ const init = async () => {
 			})
 		})
 
-		console.info('Jobs:', allJobs.length)
-
+		let algoliaJobs = []
 		if (process.env.NODE_ENV === 'production') {
-			index.replaceAllObjects(allJobs).then(({ objectsIds }) => {
+			algoliaJobs = index.replaceAllObjects(allJobs).then(({ objectsIds }) => {
 				console.info('algolia save success')
+				return objectsIds
 			}).catch(err => {
 				console.log('algolia save error', err)
 			})
 		} else {
 			console.info('Dev: algolia upload has been skipped')
 		}
+
+		console.info({
+			message: 'Jobs & algolia upload',
+			totalCompanies: companies.length,
+			toalCompaniesWithProviders: companiesGetJobs.length,
+			jobs: allJobs.length,
+			jobsUploaded: algoliaJobs.length
+		})
+
 	}).catch(err => {
 		console.error(err)
 	})

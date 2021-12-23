@@ -1,7 +1,7 @@
 import {
 	readdirSync,
 	readFileSync,
-	rmdirSync
+	rmSync
 } from 'fs'
 
 import {
@@ -89,8 +89,7 @@ const saveNewCompanies = async (companies) => {
 
 const cloneDatabase = async () => {
 	try {
-    rmdirSync(databaseDir, { recursive: true })
-    console.log(`${databaseDir} is deleted!`)
+    rmSync(databaseDir, { recursive: true, force: true })
 	} catch (error) {
     console.error(`Error while deleting ${databaseDir}`, error)
 	}
