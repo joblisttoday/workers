@@ -7,11 +7,11 @@ import {
 import {
 	writeFile,
 	mkdir,
-	rmdir,
+	rm,
 } from 'fs/promises'
 
 import simpleGit from 'simple-git'
-import * as matter from 'gray-matter';
+import matter from 'gray-matter';
 
 const databaseGit = 'https://github.com/joblisttoday/companies.git'
 const databaseDir = './.db'
@@ -37,7 +37,7 @@ const saveNewCompanies = async (companies) => {
 	const dirNewCompanies = `${databaseDir}/companies-new`
 
 	try {
-    await rmdir(dirNewCompanies, { recursive: true })
+    await rm(dirNewCompanies, { recursive: true })
     console.log(`${dirNewCompanies} is deleted`)
 	} catch (error) {
     console.error(`Error while deleting ${dirNewCompanies}`, error)

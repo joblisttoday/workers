@@ -1,3 +1,6 @@
+import './utils/fetch-polyfill.js'
+import './utils/domparser-polyfill.js'
+
 import dotenv from 'dotenv'
 import algoliasearch from 'algoliasearch'
 
@@ -46,7 +49,8 @@ const index = client.initIndex(indexName)
 const providerMethods = {
 	recruitee: recruiteeGetJobs,
 	greenhouse: greenhouseGetJobs,
-	smartrecruiters: smartrecruitersGetJobs
+	smartrecruiters: smartrecruitersGetJobs,
+	personio: personioGetJobs
 }
 
 const init = async () => {
@@ -105,5 +109,7 @@ const init = async () => {
 		console.error(err)
 	})
 }
+
+init()
 
 export default init
