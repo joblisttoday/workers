@@ -1,15 +1,15 @@
 algolia_jobs:on-schedule:
   image: node:latest
-  only:
-    - schedules
+  rules:
+    - if: $CI_PIPELINE_SOURCE == "schedule"
   script:
     - npm install
     - npm run algolia-jobs
 
 api_companies:on-schedule:
   image: node:latest
-  only:
-    - schedules
+  rules:
+    - if: $CI_PIPELINE_SOURCE == "schedule"
   script:
     - npm install
     - npm run api-companies
