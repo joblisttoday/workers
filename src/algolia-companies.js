@@ -51,13 +51,13 @@ const init = async () => {
 
 	let companies
 	try {
-		companies = await database.getAllCompaniesWithProvider()
+		companies = await database.getAllCompanies()
 	} catch (error) {
 		console.log('Error getting companies from local folder', error)
 		return
 	}
 
-	let algoliaCompanies
+	const algoliaCompanies = []
 	if (process.env.NODE_ENV === 'production') {
 		algoliaCompanies = index.replaceAllObjects(companies).then(({
 			objectsIds
