@@ -9,3 +9,6 @@ public/
 
 # the file with the keys
 .env
+
+# emacs debugger server logs
+.log/

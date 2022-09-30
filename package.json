@@ -8,6 +8,7 @@
 		"test": "echo \"Error: no test specified\" && exit 1",
 		"develop": "node src/index.js",
 		"algolia-jobs": "node src/algolia-jobs.js",
+		"algolia-companies": "node src/algolia-companies.js",
 		"api-companies": "node src/api-companies.js",
 		"convert-positions": "node src/convert-positions.js"
 	},
