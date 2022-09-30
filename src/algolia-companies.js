@@ -57,9 +57,11 @@ const init = async () => {
 		return
 	}
 
+	const companiesSerialized = serializeCompanies(companies)
+
 	let algoliaCompanies = []
 	if (process.env.NODE_ENV === 'production') {
-		algoliaCompanies = index.replaceAllObjects(companies).then(({
+		algoliaCompanies = index.replaceAllObjects(companiesSerialized).then(({
 			objectsIds
 		}) => {
 			console.info('algolia save success')
@@ -76,6 +78,22 @@ const init = async () => {
 		totalCompanies: companies.length,
 		companiesUploaded: algoliaCompanies.length,
 	})
+}
+
+const serializeCompanies = (companies) => {
+	const serialized = companies.map(company => {
+		return {
+			objectID: company.slug,
+			title: company.title,
+			slug: company.slug,
+			updatedAt: company.updated_at,
+			tags: company.tags,
+			description: company.description,
+			cities: company.cities,
+			positions: company.positions,
+		}
+	})
+	return serialized
 }
 
 init()
