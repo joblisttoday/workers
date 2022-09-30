@@ -57,7 +57,7 @@ const init = async () => {
 		return
 	}
 
-	const algoliaCompanies = []
+	let algoliaCompanies = []
 	if (process.env.NODE_ENV === 'production') {
 		algoliaCompanies = index.replaceAllObjects(companies).then(({
 			objectsIds
