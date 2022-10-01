@@ -82,6 +82,7 @@ const init = async () => {
 		return
 	}
 
+
 	const allCompaniesGetJobs = companies.map(company => {
 		const providerGetJobs = providerMethods[company['job_board_provider']]
 		if (typeof providerGetJobs === 'function') {
@@ -100,7 +101,7 @@ const init = async () => {
 		}
 	})
 
-	const companiesGetJobs = allCompaniesGetJobs.filter(company => company)
+	const companiesGetJobs = allCompaniesGetJobs.filter(company => !!company)
 
 	Promise.all(companiesGetJobs).then(responses => {
 		let allJobs = []
