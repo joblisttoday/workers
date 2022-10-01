@@ -87,7 +87,8 @@ const init = async () => {
 		if (typeof providerGetJobs === 'function') {
 			return providerGetJobs({
 				hostname: company['job_board_hostname'],
-				companyTitle: company.title
+				companyTitle: company.title,
+				companySlug: company.slug,
 			})
 		} else {
 			console.info({
@@ -126,7 +127,8 @@ const init = async () => {
 			totalCompanies: companies.length,
 			toalCompaniesWithProviders: companiesGetJobs.length,
 			jobs: allJobs.length,
-			jobsUploaded: algoliaJobs.length
+			jobsUploaded: algoliaJobs.length,
+			exampleJobs: allJobs.slice(0, 10),
 		})
 
 	}).catch(err => {

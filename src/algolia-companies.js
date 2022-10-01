@@ -61,10 +61,9 @@ const init = async () => {
 
 	let algoliaCompanies = []
 	if (process.env.NODE_ENV === 'production') {
-		algoliaCompanies = index.replaceAllObjects(companiesSerialized).then(({
-			objectsIds
-		}) => {
-			console.info('algolia save success')
+		algoliaCompanies = index.replaceAllObjects(companiesSerialized).then((data) => {
+			const { objectsIds } = data
+			console.info('algolia save success', data)
 			return objectsIds
 		}).catch(err => {
 			console.log('algolia save error', err)
