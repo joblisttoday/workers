@@ -8,7 +8,8 @@ node_modules/
 public/
 
 # the file with the keys
-.env
+.env*
+!.env.example
 
 # emacs debugger server logs
 .log/

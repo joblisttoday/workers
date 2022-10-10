@@ -4,18 +4,14 @@ import './utils/domparser-polyfill.js'
 import dotenv from 'dotenv'
 import algoliasearch from 'algoliasearch'
 
-import {
-	getJobs as recruiteeGetJobs
-} from '@joblist/job-board-providers/src/apis/recruitee.js'
-import {
-	getJobs as greenhouseGetJobs
-} from '@joblist/job-board-providers/src/apis/greenhouse.js'
-import {
-	getJobs as personioGetJobs
-} from '@joblist/job-board-providers/src/apis/personio.js'
-import {
-	getJobs as smartrecruitersGetJobs
-} from '@joblist/job-board-providers/src/apis/smartrecruiters.js'
+import { getJobs as recruiteeGetJobs } from '@joblist/job-board-providers/src/apis/recruitee.js'
+import { getJobs as greenhouseGetJobs } from '@joblist/job-board-providers/src/apis/greenhouse.js'
+import { getJobs as personioGetJobs } from '@joblist/job-board-providers/src/apis/personio.js'
+import { getJobs as smartrecruitersGetJobs } from '@joblist/job-board-providers/src/apis/smartrecruiters.js'
+import { getJobs as ashbyGetJobs } from '@joblist/job-board-providers/src/apis/ashby.js'
+import { getJobs as leverGetJobs } from '@joblist/job-board-providers/src/apis/lever.js'
+import { getJobs as workableGetJobs } from '@joblist/job-board-providers/src/apis/workable.js'
+
 
 import database from './database.js'
 
@@ -50,7 +46,10 @@ const providerMethods = {
 	recruitee: recruiteeGetJobs,
 	greenhouse: greenhouseGetJobs,
 	smartrecruiters: smartrecruitersGetJobs,
-	personio: personioGetJobs
+	personio: personioGetJobs,
+	ashby: ashbyGetJobs,
+	lever: leverGetJobs,
+	workable: workableGetJobs,
 }
 
 const init = async () => {
@@ -125,8 +124,8 @@ const init = async () => {
 
 		console.info({
 			message: 'Jobs & algolia upload',
-			totalCompanies: companies.length,
-			toalCompaniesWithProviders: companiesGetJobs.length,
+			totalCompaniesWithProviders: companies.length,
+			toalCompaniesWithKnownProviders: companiesGetJobs.length,
 			jobs: allJobs.length,
 			jobsUploaded: algoliaJobs.length,
 			exampleJobs: allJobs.slice(0, 10),
