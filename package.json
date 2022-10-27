@@ -6,7 +6,7 @@
 	"type": "module",
 	"scripts": {
 		"test": "echo \"Error: no test specified\" && exit 1",
-		"develop": "node src/index.js",
+		"dev": "node src/index.js",
 		"algolia-jobs": "node src/algolia-jobs.js",
 		"algolia-companies": "node src/algolia-companies.js",
 		"api-companies": "node src/api-companies.js",
@@ -23,7 +23,7 @@
 	},
 	"homepage": "https://gitlab.com/joblist/workers#readme",
 	"dependencies": {
-		"@joblist/job-board-providers": "^0.0.16",
+		"@joblist/job-board-providers": "^0.0.18",
 		"algoliasearch": "^4.11.0",
 		"dotenv": "^10.0.0",
 		"gray-matter": "^4.0.3",
