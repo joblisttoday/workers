@@ -112,6 +112,11 @@ const init = async () => {
 
 		let algoliaJobs = []
 		if (process.env.NODE_ENV === 'production') {
+			try {
+				index.clearObjects()
+			} catch(error) {
+				console.info('error clearing jobs index', error)
+			}
 			algoliaJobs = index.replaceAllObjects(allJobs).then(({ objectsIds }) => {
 				console.info('algolia save success')
 				return objectsIds

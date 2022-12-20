@@ -1,3 +1,6 @@
+variables:
+  NODE_ENV: "production"
+
 algolia_jobs:on-schedule:
   image: node:latest
   rules:
