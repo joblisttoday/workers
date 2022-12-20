@@ -128,7 +128,6 @@ const init = async () => {
 			toalCompaniesWithKnownProviders: companiesGetJobs.length,
 			jobs: allJobs.length,
 			jobsUploaded: algoliaJobs.length,
-			exampleJobs: allJobs.slice(0, 10),
 		})
 
 	}).catch(err => {
