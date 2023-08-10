@@ -1,4 +1,4 @@
-import database from './database.js'
+import database from './database-git.js'
 
 const init = async () => {
 	try {

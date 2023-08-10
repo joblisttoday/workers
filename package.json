@@ -7,8 +7,9 @@
 	"scripts": {
 		"test": "echo \"Error: no test specified\" && exit 1",
 		"dev": "node src/index.js",
-		"algolia-jobs": "node src/algolia-jobs.js",
-		"algolia-companies": "node src/algolia-companies.js",
+		"db-sqlite": "node src/database-sqlite.js ",
+		"save-jobs": "node src/save-jobs.js",
+		"save-companies": "node src/save-companies.js",
 		"api-companies": "node src/api-companies.js",
 		"convert-positions": "node src/convert-positions.js"
 	},
@@ -23,12 +24,14 @@
 	},
 	"homepage": "https://gitlab.com/joblist/workers#readme",
 	"dependencies": {
-		"@joblist/job-board-providers": "^0.0.20",
-		"algoliasearch": "^4.11.0",
-		"dotenv": "^10.0.0",
+		"@joblist/job-board-providers": "^0.0.21",
+		"dotenv": "^16.3.1",
 		"gray-matter": "^4.0.3",
-		"jsdom": "^19.0.0",
-		"node-fetch": "^3.1.0",
-		"simple-git": "^2.48.0"
-	}
+		"jsdom": "^22.1.0",
+		"node-fetch": "^3.3.2",
+		"simple-git": "^3.19.1",
+		"sqlite": "^5.0.1",
+		"sqlite3": "^5.1.6"
+	},
+	"prettier": {}
 }

@@ -1,49 +1,48 @@
-import {
-	writeFile,
-	mkdirSync,
-	existsSync
-} from 'fs'
+import { writeFile, mkdirSync, existsSync } from "fs";
 
-import database from './database.js'
+import database from "./database-git.js";
 
 const init = async () => {
 	/* based on gitlab artifact strategy */
-	const dirArtifacts = './public'
-	const fileName = 'companies.json'
+	const dirArtifacts = "./public";
+	const fileName = "companies.json";
 
 	try {
-		await database.cloneDatabase()
+		await database.cloneDatabase();
 	} catch (error) {
-		console.log('Error cloning new database', error)
-		return
+		console.log("Error cloning new database", error);
+		return;
 	}
 
-	let companies
+	let companies;
 	try {
-		companies = await database.getAllCompanies()
+		companies = await database.getAllCompanies();
 	} catch (error) {
-		console.log('Error getting companies from local folder', error)
-		return
+		console.log("Error getting companies from local folder", error);
+		return;
 	}
 
-	let companiesJSONString = JSON.stringify(companies)
+	let companiesJSONString = JSON.stringify(companies);
 
-	if (!existsSync(dirArtifacts)){
-    mkdirSync(dirArtifacts)
+	if (!existsSync(dirArtifacts)) {
+		mkdirSync(dirArtifacts);
 	}
 
 	writeFile(
 		`${dirArtifacts}/${fileName}`,
 		companiesJSONString,
-		'utf8',
+		"utf8",
 		(error) => {
 			if (error) {
-				console.log(`Error writing companies file: ${error}`)
+				console.log(`Error writing companies file: ${error}`);
 			} else {
-				console.log(`Wrote file at ${dirArtifacts}/${fileName} with ${companies.length} companies`)
+				console.log(
+					`Wrote file at ${dirArtifacts}/${fileName} with ${companies.length} companies`
+				);
 			}
-	})
-}
+		}
+	);
+};
 
 /* launch the script */
-init()
+init();

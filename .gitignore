@@ -13,3 +13,6 @@ public/
 
 # emacs debugger server logs
 .log/
+
+# generated sqlite database
+joblist.db

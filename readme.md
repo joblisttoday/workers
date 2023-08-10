@@ -27,3 +27,17 @@ That way, jobs will be fetched for all companies, and an algolia index populated
 ## Job board providers
 
 The possible **values** of the **key** `company.job_board_provider`, is one of those known to https://gitlab.com/joblist/job-board-providers
+## Database(s)
+
+> Tried firebase, algolia, supabase, static files.
+
+Now the status is that the data is edited in static files (markdown on
+the github data repository), and then consolidated into a [sqlite
+wasm](https://www.npmjs.com/package/@sqlite.org/sqlite-wasm) database.
+
+It is stored as an artifact in gitlab workers repo, then fetched by
+the client (which fetches the latest).
+
+- run `sqlite3 joblist.db` to create/open/use the database.
+- run `npm run save-companies` or `npm run save-jobs` to load the
+  database with its data
