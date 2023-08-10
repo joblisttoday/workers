@@ -1,21 +1,16 @@
 variables:
   NODE_ENV: "production"
 
-algolia_jobs:on-schedule:
+save-database:on-schedule:
   image: node:latest
   rules:
     - if: $CI_PIPELINE_SOURCE == "schedule"
   script:
     - npm install
-    - npm run algolia-jobs
-
-algolia_companies:on-schedule:
-  image: node:latest
-  rules:
-    - if: $CI_PIPELINE_SOURCE == "schedule"
-  script:
-    - npm install
-    - npm run algolia-companies
+    - npm run save-companies
+    - npm run save-jobs
+    - mkdir public
+    - mv joblist.db public/
 
 api_companies:on-schedule:
   image: node:latest
@@ -26,4 +21,4 @@ api_companies:on-schedule:
     - npm run api-companies
   artifacts:
     paths:
-    - public
+      - public
