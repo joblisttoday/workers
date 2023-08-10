@@ -11,6 +11,9 @@ save-database:on-schedule:
     - npm run save-jobs
     - mkdir public
     - mv joblist.db public/
+  artifacts:
+    paths:
+      - public
 
 api_companies:on-schedule:
   image: node:latest
