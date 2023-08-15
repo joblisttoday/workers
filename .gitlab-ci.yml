@@ -1,5 +1,6 @@
 variables:
   NODE_ENV: "production"
+  JOBLIST_DB_URL: "https://gitlab.com/joblist/workers/-/jobs/artifacts/main/raw/public/joblist.db?job=save-database:on-schedule"
 
 save-database:on-schedule:
   image: node:latest
@@ -22,6 +23,14 @@ api_companies:on-schedule:
   script:
     - npm install
     - npm run api-companies
+  artifacts:
+    paths:
+      - public
+
+pages:on-schedule:
+  script:
+    - mkdir public
+    - curl $JOBLIST_DB_URL > public/joblist.db
   artifacts:
     paths:
       - public
