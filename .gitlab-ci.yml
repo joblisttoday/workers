@@ -4,6 +4,7 @@ variables:
 
 save-database:on-schedule:
   image: node:latest
+  stage: build
   rules:
     - if: $CI_PIPELINE_SOURCE == "schedule"
   script:
@@ -16,8 +17,9 @@ save-database:on-schedule:
     paths:
       - public
 
-api_companies:on-schedule:
+.api_companies:on-schedule:
   image: node:latest
+  stage: build
   rules:
     - if: $CI_PIPELINE_SOURCE == "schedule"
   script:
@@ -27,10 +29,13 @@ api_companies:on-schedule:
     paths:
       - public
 
-pages:on-schedule:
+pages:
+  stage: deploy
   script:
     - mkdir public
     - curl $JOBLIST_DB_URL > public/joblist.db
+  only:
+    - schedules
   artifacts:
     paths:
       - public
