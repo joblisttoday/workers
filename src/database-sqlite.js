@@ -67,6 +67,9 @@ const insertOrUpdateJobs = async (jobs) => {
 };
 
 const insertOrUpdateCompany = async (company) => {
+	// Transform the JS objects to JSON strings before inserting
+	company.positions = JSON.stringify(company.positions);
+	company.tags = JSON.stringify(company.tags);
 	const fields = Object.keys(company);
 	const values = Object.values(company);
 	await insertOrUpdate('companies', fields, values, 'slug');
