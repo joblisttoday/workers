@@ -11,24 +11,9 @@ const config = dotenv.config();
 const init = async () => {
 	await database.cloneDatabase();
 	const companies = await database.getAllCompanies();
-	const companiesSerialized = serializeCompanies(companies);
-	await insertOrUpdateCompanies(companiesSerialized);
+	// no need to serialize companies, lets do it at the level of sql
+	await insertOrUpdateCompanies(companies);
 }
-
-const serializeCompanies = (companies) => {
-	const serialized = companies.map((company) => {
-		return {
-			title: company.title,
-			slug: company.slug,
-			updated_at: company.updated_at,
-			tags: company.tags,
-			description: company.description,
-			cities: company.cities,
-			positions: company.positions,
-		};
-	});
-	return serialized;
-};
 
 init();
 

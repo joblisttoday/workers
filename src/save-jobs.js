@@ -55,6 +55,7 @@ const init = async () => {
 	await insertOrUpdateJobs(serializedJobs);
 };
 
+// we serialize the jobs to `_` notation
 const serializeJobs = (jobs) => {
 	return jobs.map(job => ({
 		objectID: job.objectID,

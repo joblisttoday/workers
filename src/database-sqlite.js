@@ -8,15 +8,15 @@ let db;
 /* console.log('rootPath', rootPath) */
 
 // Initialize SQLite Database
-const initDb = async () => {
+const initDb = async (filename = "joblist.db") => {
 	db = await open({
-		filename: `./joblist.db`,
+		filename: `./${filename}`,
 		driver: sqlite3.Database
 	});
 };
 
-// Create the necessary tables if they don't exist.
 const setupTables = async () => {
+	/* Create the necessary tables if they don't exist. */
 	await db.run(`
 		CREATE TABLE IF NOT EXISTS companies (
 			slug TEXT PRIMARY KEY,
@@ -49,9 +49,11 @@ const setupTables = async () => {
 			company_title TEXT
 		);
 	`);
+
+	/* create virtual tables for full text search */
 	await db.run(`
 		CREATE VIRTUAL TABLE IF NOT EXISTS companies_fts USING fts5 (
-			slug, title, description, tags, content=companies, content_rowid=slug
+			slug, title, description, tags, positions, content=companies, content_rowid=slug
 		);
 	`);
 	await db.run(`
@@ -59,6 +61,33 @@ const setupTables = async () => {
 			objectID, name, location, company_slug, company_title, content=jobs, content_rowid=objectID
 		);
 	`);
+
+	/* create triggers, to populte FTS tables when their source table updates */
+	/* triggers seem not to be needed since te FTS Virtual table are "content" bound to `companies` */
+	/* await db.run(`
+		 CREATE TRIGGER companies_after_insert AFTER INSERT ON companies BEGIN
+		 INSERT OR REPLACE INTO companies_fts (rowid, slug, title, description, tags, positions)
+		 VALUES (new.rowid, new.slug, new.title, new.description, new.tags, new.positions);
+		 END;
+		 `);
+		 await db.run(`
+		 CREATE TRIGGER companies_after_update AFTER UPDATE ON companies BEGIN
+		 INSERT OR REPLACE INTO companies_fts (rowid, slug, title, description, tags, positions)
+		 VALUES (new.rowid, new.slug, new.title, new.description, new.tags, new.positions);
+		 END;
+		 `);
+		 await db.run(`
+		 CREATE TRIGGER jobs_after_insert AFTER INSERT ON jobs BEGIN
+		 INSERT OR REPLACE INTO jobs_fts (rowid, objectID, name, location, company_slug, company_title)
+		 VALUES (new.rowid, new.objectID, new.name, new.location, new.company_slug, new.company_title);
+		 END;
+		 `);
+		 await db.run(`
+		 CREATE TRIGGER jobs_after_update AFTER UPDATE ON jobs BEGIN
+		 INSERT OR REPLACE INTO jobs_fts (rowid, objectID, name, location, company_slug, company_title)
+		 VALUES (new.rowid, new.objectID, new.name, new.location, new.company_slug, new.company_title);
+		 END;
+		 `); */
 };
 const insertOrUpdateCompanies = async (companies) => {
 	for (let company of companies) {
@@ -93,28 +122,22 @@ const insertOrUpdateCompany = async ({
 		INSERT OR REPLACE INTO companies (slug, title, updated_at, company_url, job_board_url, job_board_provider, job_board_hostname, description, tags, twitter_url, linkedin_url, youtube_url, instagram_url, facebook_url, github_url, wikipedia_url, positions)
 		VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
 	`, [slug, title, updated_at, company_url, job_board_url, job_board_provider, job_board_hostname, description, JSON.stringify(tags), twitter_url, linkedin_url, youtube_url, instagram_url, facebook_url, github_url, wikipedia_url, JSON.stringify(positions)]);
-
-	// Update the FTS table
-	await db.run(`
-		INSERT OR REPLACE INTO companies_fts (rowid, slug, title, description, tags)
-		VALUES ((SELECT rowid FROM companies WHERE slug = ?), ?, ?, ?, ?)
-	`, [slug, slug, title, description, JSON.stringify(tags)]);
 };
+
 const insertOrUpdateJob = async ({
-	objectID, name, url, location, published_date, company_slug, company_title
+	objectID = "",
+	name = "",
+	url = "",
+	location = "",
+	published_date = "",
+	company_slug = "",
+	company_title = ""
 }) => {
 	await db.run(`
 		INSERT OR REPLACE INTO jobs (
 			objectID, name, url, location, published_date, company_slug, company_title
 		) VALUES (?, ?, ?, ?, ?, ?, ?);
 	`, [objectID, name, url, location, published_date, company_slug, company_title]);
-
-	// Update the FTS table
-	await db.run(`
-		INSERT OR REPLACE INTO jobs_fts (rowid, objectID, name, location, company_slug, company_title)
-		VALUES ((SELECT rowid FROM jobs WHERE objectID = ?), ?, ?, ?, ?, ?)
-	`, [objectID, objectID, name, location, company_slug, company_title]);
-
 };
 
 // We initialize the database connection and set up the tables when this module is imported.
