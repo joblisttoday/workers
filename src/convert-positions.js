@@ -41,7 +41,6 @@ const serializeCompany = (company) => {
 		linkedin_url,
 		instagram_url,
 		facebook_url,
-		cities,
 		positions,
 		created_at,
 		updated_at,
@@ -90,11 +89,6 @@ const serializeCompany = (company) => {
 	}
 	if (updated_at) {
 		sCompany['updated_at'] = updated_at
-	}
-	if (cities) {
-		sCompany['cities'] = cities
-	} else {
-		sCompany['cities'] = ['berlin']
 	}
 	if (positions && positions.length) {
 		sCompany['positions'] = positions

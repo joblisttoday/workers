@@ -145,7 +145,6 @@ const serializeJson = (item) => {
 		linkedin_url: item.data['linkedin_url'],
 		instagram_url: item.data['instagram_url'],
 		facebook_url: item.data['facebook_url'],
-		cities: item.data['cities'],
 		positions: item.data['positions'],
 		created_at: item.data['created_at'],
 		updated_at: item.data['updated_at']

@@ -1,8 +1,12 @@
 # js modules
 node_modules/
 
-# the cloned repo used as db
+# the cloned git "data" repo used as database
 .db/
+
+# generated sqlite3 database (& recovory) files
+joblist.db
+joblist.db-journal
 
 # the artifacts for gitlab ci
 public/
@@ -13,6 +17,3 @@ public/
 
 # emacs debugger server logs
 .log/
-
-# generated sqlite database
-joblist.db
