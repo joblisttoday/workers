@@ -61,33 +61,6 @@ const setupTables = async () => {
 			objectID, name, location, company_slug, company_title, content=jobs, content_rowid=objectID
 		);
 	`);
-
-	/* create triggers, to populte FTS tables when their source table updates */
-	/* triggers seem not to be needed since te FTS Virtual table are "content" bound to `companies` */
-	/* await db.run(`
-		 CREATE TRIGGER companies_after_insert AFTER INSERT ON companies BEGIN
-		 INSERT OR REPLACE INTO companies_fts (rowid, slug, title, description, tags, positions)
-		 VALUES (new.rowid, new.slug, new.title, new.description, new.tags, new.positions);
-		 END;
-		 `);
-		 await db.run(`
-		 CREATE TRIGGER companies_after_update AFTER UPDATE ON companies BEGIN
-		 INSERT OR REPLACE INTO companies_fts (rowid, slug, title, description, tags, positions)
-		 VALUES (new.rowid, new.slug, new.title, new.description, new.tags, new.positions);
-		 END;
-		 `);
-		 await db.run(`
-		 CREATE TRIGGER jobs_after_insert AFTER INSERT ON jobs BEGIN
-		 INSERT OR REPLACE INTO jobs_fts (rowid, objectID, name, location, company_slug, company_title)
-		 VALUES (new.rowid, new.objectID, new.name, new.location, new.company_slug, new.company_title);
-		 END;
-		 `);
-		 await db.run(`
-		 CREATE TRIGGER jobs_after_update AFTER UPDATE ON jobs BEGIN
-		 INSERT OR REPLACE INTO jobs_fts (rowid, objectID, name, location, company_slug, company_title)
-		 VALUES (new.rowid, new.objectID, new.name, new.location, new.company_slug, new.company_title);
-		 END;
-		 `); */
 };
 const insertOrUpdateCompanies = async (companies) => {
 	for (let company of companies) {
