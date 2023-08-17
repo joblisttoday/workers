@@ -5,8 +5,6 @@ import getLocalPath from './utils/get-local-path.js'
 const rootPath = getLocalPath(import.meta.url, 2)
 let db;
 
-/* console.log('rootPath', rootPath) */
-
 // Initialize SQLite Database
 const initDb = async (filename = "joblist.db") => {
 	db = await open({
@@ -53,13 +51,49 @@ const setupTables = async () => {
 	/* create virtual tables for full text search */
 	await db.run(`
 		CREATE VIRTUAL TABLE IF NOT EXISTS companies_fts USING fts5 (
-			slug, title, description, tags, positions, content=companies, content_rowid=slug
+			slug, title, description, tags, positions
 		);
 	`);
 	await db.run(`
 		CREATE VIRTUAL TABLE IF NOT EXISTS jobs_fts USING fts5 (
-			objectID, name, location, company_slug, company_title, content=jobs, content_rowid=objectID
+			objectID, name, location, company_slug, company_title
 		);
+	`);
+
+	/* create triggers to populate FTS tables when their source table updates */
+	await db.run(`
+		 CREATE TRIGGER IF NOT EXISTS companies_after_insert AFTER INSERT ON companies BEGIN
+		 INSERT OR REPLACE INTO companies_fts (rowid, slug, title, description, tags, positions)
+		 VALUES (new.rowid, new.slug, new.title, new.description, new.tags, new.positions);
+		 END;
+	`);
+	await db.run(`
+		 CREATE TRIGGER IF NOT EXISTS companies_after_update AFTER UPDATE ON companies BEGIN
+		 INSERT OR REPLACE INTO companies_fts (rowid, slug, title, description, tags, positions)
+		 VALUES (new.rowid, new.slug, new.title, new.description, new.tags, new.positions);
+		 END;
+	`);
+	await db.run(`
+		 CREATE TRIGGER IF NOT EXISTS companies_after_delete AFTER DELETE ON companies BEGIN
+		 DELETE FROM companies_fts WHERE rowid = old.rowid;
+		 END;
+	`);
+	await db.run(`
+		 CREATE TRIGGER IF NOT EXISTS jobs_after_insert AFTER INSERT ON jobs BEGIN
+		 INSERT OR REPLACE INTO jobs_fts (rowid, objectID, name, location, company_slug, company_title)
+		 VALUES (new.rowid, new.objectID, new.name, new.location, new.company_slug, new.company_title);
+		 END;
+	`);
+	await db.run(`
+		 CREATE TRIGGER IF NOT EXISTS jobs_after_update AFTER UPDATE ON jobs BEGIN
+		 INSERT OR REPLACE INTO jobs_fts (rowid, objectID, name, location, company_slug, company_title)
+		 VALUES (new.rowid, new.objectID, new.name, new.location, new.company_slug, new.company_title);
+		 END;
+	`);
+	await db.run(`
+		 CREATE TRIGGER IF NOT EXISTS jobs_after_delete AFTER DELETE ON jobs BEGIN
+		 DELETE FROM jobs_fts WHERE rowid = old.rowid;
+		 END;
 	`);
 };
 const insertOrUpdateCompanies = async (companies) => {
@@ -72,6 +106,7 @@ const insertOrUpdateJobs = async (jobs) => {
 		await insertOrUpdateJob(job);
 	}
 };
+
 const insertOrUpdateCompany = async ({
 	slug = '',
 	title = "",
