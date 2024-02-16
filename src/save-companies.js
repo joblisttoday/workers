@@ -12,6 +12,7 @@ const init = async () => {
 	await database.cloneDatabase();
 	const companies = await database.getAllCompanies();
 	// no need to serialize companies, lets do it at the level of sql
+	console.log("hello", companies);
 	await insertOrUpdateCompanies(companies);
 }
 
