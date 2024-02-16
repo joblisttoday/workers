@@ -25,6 +25,7 @@ const executeSqlFile = async (filename) => {
 const createTables = async () => {
 	await executeSqlFile('companies_table.sql');
 	await executeSqlFile('jobs_table.sql');
+	await executeSqlFile('companies_data_processing.sql');
 };
 
 const createFTSTables = async () => {
