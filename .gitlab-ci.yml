@@ -10,7 +10,7 @@ save-database:on-schedule:
     - npm install
     - npm run save-companies
     - npm run save-jobs
-    - npm run analyze-companie
+    - npm run analyze-companies
     - npm run analyze-jobs
     - mkdir -p public
     - mv joblist.db public/
