@@ -2,51 +2,43 @@ import "./utils/fetch-polyfill.js";
 import "./utils/domparser-polyfill.js";
 
 import database from "./database-git.js";
-import { insertOrUpdateJobs } from "./database-sqlite.js"
+import { insertOrUpdateJobs } from "./database-sqlite.js";
 import dotenv from "dotenv";
 const config = dotenv.config();
 
-import { getJobs as recruiteeGetJobs } from "@joblist/job-board-providers/src/apis/recruitee.js";
-import { getJobs as greenhouseGetJobs } from "@joblist/job-board-providers/src/apis/greenhouse.js";
-import { getJobs as personioGetJobs } from "@joblist/job-board-providers/src/apis/personio.js";
-import { getJobs as smartrecruitersGetJobs } from "@joblist/job-board-providers/src/apis/smartrecruiters.js";
-import { getJobs as ashbyGetJobs } from "@joblist/job-board-providers/src/apis/ashby.js";
-import { getJobs as leverGetJobs } from "@joblist/job-board-providers/src/apis/lever.js";
-import { getJobs as workableGetJobs } from "@joblist/job-board-providers/src/apis/workable.js";
+import joblist from "@joblist/components";
 
-const providerMethods = {
-	recruitee: recruiteeGetJobs,
-	greenhouse: greenhouseGetJobs,
-	smartrecruiters: smartrecruitersGetJobs,
-	personio: personioGetJobs,
-	ashby: ashbyGetJobs,
-	lever: leverGetJobs,
-	workable: workableGetJobs,
-};
+const { providers } = joblist;
 
 const init = async () => {
 	await database.cloneDatabase();
 	const companies = await database.getAllCompaniesWithProvider();
 	const allCompaniesGetJobs = companies.reduce((acc, company) => {
-		const providerGetJobs = providerMethods[company["job_board_provider"]];
-		if (typeof providerGetJobs === "function") {
-			const companyJobsPromise = providerGetJobs({
+		const companyProvider = company["job_board_provider"];
+		const provider = providers[companyProvider];
+		console.log(provider, companyProvider);
+		if (typeof provider?.getJobs === "function") {
+			const companyJobsPromise = provider.getJobs({
 				hostname: company["job_board_hostname"],
 				companyTitle: company.title,
 				companySlug: company.slug,
-			})
-			acc.push(companyJobsPromise)
+			});
+			acc.push(companyJobsPromise);
 		}
-		return acc
+		return acc;
 	}, []);
-	const companiesGetJobsPromises = allCompaniesGetJobs.filter((company) => !!company);
-	const responses = await Promise.allSettled(companiesGetJobsPromises).then(responses => {
-		return responses.filter((res) => !!res)
-	}).catch(error => {
-		console.log('Error fetching jobs', error)
-	})
+	const companiesGetJobsPromises = allCompaniesGetJobs.filter(
+		(company) => !!company,
+	);
+	const responses = await Promise.allSettled(companiesGetJobsPromises)
+		.then((responses) => {
+			return responses.filter((res) => !!res);
+		})
+		.catch((error) => {
+			console.log("Error fetching jobs", error);
+		});
 	let allJobs = [];
-	responses.forEach(({value: jobs = []}) => {
+	responses.forEach(({ value: jobs = [] }) => {
 		jobs.forEach((job) => {
 			allJobs.push(job);
 		});
@@ -57,7 +49,7 @@ const init = async () => {
 
 // we serialize the jobs to `_` notation
 const serializeJobs = (jobs) => {
-	return jobs.map(job => ({
+	return jobs.map((job) => ({
 		objectID: job.objectID,
 		name: job.name,
 		url: job.url,
