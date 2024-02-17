@@ -8,26 +8,17 @@ const config = dotenv.config();
 
 import joblist from "@joblist/components";
 
-console.log(joblist);
-
-const providerMethods = {
-	recruitee: recruiteeGetJobs,
-	greenhouse: greenhouseGetJobs,
-	smartrecruiters: smartrecruitersGetJobs,
-	personio: personioGetJobs,
-	ashby: ashbyGetJobs,
-	lever: leverGetJobs,
-	workable: workableGetJobs,
-};
+const { providers } = joblist;
 
 const init = async () => {
-	return;
 	await database.cloneDatabase();
 	const companies = await database.getAllCompaniesWithProvider();
 	const allCompaniesGetJobs = companies.reduce((acc, company) => {
-		const providerGetJobs = providerMethods[company["job_board_provider"]];
-		if (typeof providerGetJobs === "function") {
-			const companyJobsPromise = providerGetJobs({
+		const companyProvider = company["job_board_provider"];
+		const provider = providers[companyProvider];
+		console.log(provider, companyProvider);
+		if (typeof provider?.getJobs === "function") {
+			const companyJobsPromise = provider.getJobs({
 				hostname: company["job_board_hostname"],
 				companyTitle: company.title,
 				companySlug: company.slug,
