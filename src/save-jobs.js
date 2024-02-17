@@ -16,7 +16,6 @@ const init = async () => {
 	const allCompaniesGetJobs = companies.reduce((acc, company) => {
 		const companyProvider = company["job_board_provider"];
 		const provider = providers[companyProvider];
-		console.log(provider, companyProvider);
 		if (typeof provider?.getJobs === "function") {
 			const companyJobsPromise = provider.getJobs({
 				hostname: company["job_board_hostname"],
