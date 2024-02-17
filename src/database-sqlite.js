@@ -96,7 +96,7 @@ const analyzeJobs = async () => {
 };
 
 // We initialize the database connection and set up the tables when this module is imported.
-(async () => {
+await (async () => {
 	await initDb();
 	await setupTables();
 })();
