@@ -17,3 +17,7 @@ public/
 
 # emacs debugger server logs
 .log/
+
+# macOS
+
+.DS_Store

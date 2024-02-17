@@ -72,12 +72,15 @@ const insertOrUpdateCompany = async (company) => {
 	const fields = Object.keys(company);
 	const values = Object.values(company);
 	await insertOrUpdate('companies', fields, values, 'slug');
+	await executeSqlFile('companies_data_processing.sql');
 };
 
 const insertOrUpdateJob = async (job) => {
 	const fields = Object.keys(job);
 	const values = Object.values(job);
 	await insertOrUpdate('jobs', fields, values, 'objectID');
+	await executeSqlFile('jobs_data_processing.sql');
+	// await executeSqlFile('agg-data-processing.sql');
 };
 
 // We initialize the database connection and set up the tables when this module is imported.
