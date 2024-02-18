@@ -1,38 +1,50 @@
+---
+---
+stages:
+  - save
+  - processing
+  - analyze
+  - deploy
+
 variables:
   NODE_ENV: "production"
 
-save-database:on-schedule:
-  image: node:latest
-  stage: build
-  rules:
-    - if: $CI_PIPELINE_SOURCE == "schedule"
-  script:
-    - npm install
-    - npm run build-db
-    - mkdir -p public
-    - mv joblist.db public/
-  artifacts:
-    paths:
-      - public
+image: node:latest
 
-.api_companies:on-schedule:
-  image: node:latest
-  stage: build
+save:on-schedule:
+  stage: save
   rules:
     - if: $CI_PIPELINE_SOURCE == "schedule"
   script:
     - npm install
-    - npm run api-companies
-  artifacts:
-    paths:
-      - public
+    - npm run save-companies
+    - npm run save-jobs
+
+processing:on-schedule:
+  stage: processing
+  rules:
+    - if: $CI_PIPELINE_SOURCE == "schedule"
+  script:
+    - npm install
+    - npm run processing-companies
+    - npm run processing-jobs
+
+analyze:on-schedule:
+  stage: analyze
+  rules:
+    - if: $CI_PIPELINE_SOURCE == "schedule"
+  script:
+    - npm install
+    - npm run analyze-companies
+    - npm run analyze-jobs
 
 pages:
   stage: deploy
   script:
     - mkdir -p public
-  only:
-    - schedules
+    - mv joblist.db public/
   artifacts:
     paths:
       - public
+  only:
+    - schedules
