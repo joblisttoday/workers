@@ -7,13 +7,16 @@
 	"scripts": {
 		"test": "echo \"Error: no test specified\" && exit 1",
 		"dev": "node src/index.js",
-		"db-sqlite": "node src/database-sqlite.js ",
-		"save-jobs": "node src/save-jobs.js",
-		"save-companies": "node src/save-companies.js",
-		"api-companies": "node src/api-companies.js",
-		"convert-positions": "node src/convert-positions.js",
-		"analyze-companies": "node src/analyze-companies.js",
-		"analyze-jobs": "node src/analyze-jobs.js"
+		"build-db": "npm run save-companies && npm run save-jobs && npm run processing-companies && npm run processing-jobs && npm run analyze-companies && npm run analyze-jobs",
+		"db-sqlite": "node src/scripts/database-sqlite.js ",
+		"save-jobs": "node src/scripts/save-jobs.js",
+		"save-companies": "node src/scripts/save-companies.js",
+		"processing-jobs": "node src/scripts/processing-jobs.js",
+		"processing-companies": "node src/scripts/processing-companies.js",
+		"analyze-jobs": "node src/scripts/analyze-jobs.js",
+		"analyze-companies": "node src/scripts/analyze-companies.js",
+		"convert-positions": "node src/scripts/convert-positions.js",
+		"api-companies": "node src/scripts/api-companies.js"
 	},
 	"repository": {
 		"type": "git",

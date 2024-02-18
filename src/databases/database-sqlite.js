@@ -3,6 +3,7 @@ import { open } from "sqlite";
 import fs from "fs";
 import path from "path";
 
+/* global variable for the db (meh) */
 let db;
 
 const initDb = async (filename = "joblist.db") => {
@@ -12,37 +13,18 @@ const initDb = async (filename = "joblist.db") => {
 	});
 };
 
+/* general db utils */
 const executeQuery = async (query, params = []) => {
-	await db.run(query, params);
+	return db.run(query, params);
 };
 
 const executeSqlFile = async (filename) => {
 	const filePath = path.resolve("src/sqlite", filename);
 	const sql = fs.readFileSync(filePath, "utf-8");
-	await executeQuery(sql);
+	return executeQuery(sql);
 };
 
-const createTables = async () => {
-	await executeSqlFile("companies_table.sql");
-	await executeSqlFile("jobs_table.sql");
-};
-
-const createFTSTables = async () => {
-	await executeSqlFile("companies_fts_table.sql");
-	await executeSqlFile("jobs_fts_table.sql");
-};
-
-const createTriggers = async () => {
-	await executeSqlFile("companies_trigger.sql");
-	await executeSqlFile("jobs_trigger.sql");
-};
-
-const setupTables = async () => {
-	await createTables();
-	await createFTSTables();
-	await createTriggers();
-};
-
+/* sepecific to our models (meh) */
 const insertOrUpdate = async (table, fields, values, conflictColumn) => {
 	const placeholders = values.map(() => "?").join(", ");
 	const updateSetters = fields
@@ -77,25 +59,40 @@ const insertOrUpdateCompany = async (company) => {
 	const fields = Object.keys(company);
 	const values = Object.values(company);
 	await insertOrUpdate("companies", fields, values, "slug");
-	await executeSqlFile("companies_data_processing.sql");
 };
 
 const insertOrUpdateJob = async (job) => {
 	const fields = Object.keys(job);
 	const values = Object.values(job);
 	await insertOrUpdate("jobs", fields, values, "objectID");
-	await executeSqlFile("jobs_data_processing.sql");
 };
 
-/* create some information in the database about the "raw data tables" */
-const analyzeCompanies = async () => {
-	await executeSqlFile("companies_analyze.sql");
-};
-const analyzeJobs = async () => {
-	await executeSqlFile("jobs_analyze.sql");
+/* executed each time this file is imported */
+const createTables = async () => {
+	await executeSqlFile("companies_table.sql");
+	await executeSqlFile("jobs_table.sql");
 };
 
-// We initialize the database connection and set up the tables when this module is imported.
+const createFTSTables = async () => {
+	await executeSqlFile("companies_fts_table.sql");
+	await executeSqlFile("jobs_fts_table.sql");
+};
+
+const createTriggers = async () => {
+	await executeSqlFile("companies_trigger.sql");
+	await executeSqlFile("jobs_trigger.sql");
+};
+
+const setupTables = async () => {
+	await createTables();
+	await createFTSTables();
+	await createTriggers();
+};
+
+/*
+	 initialize the database connection and
+	 set up the tables when this module is imported.
+ */
 await (async () => {
 	await initDb();
 	await setupTables();
@@ -106,6 +103,5 @@ export {
 	insertOrUpdateCompanies,
 	insertOrUpdateJob,
 	insertOrUpdateJobs,
-	analyzeCompanies,
-	analyzeJobs,
+	executeSqlFile,
 };

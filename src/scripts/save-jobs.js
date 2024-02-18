@@ -1,8 +1,8 @@
-import "./utils/fetch-polyfill.js";
-import "./utils/domparser-polyfill.js";
+import "../utils/fetch-polyfill.js";
+import "../utils/domparser-polyfill.js";
 
-import database from "./database-git.js";
-import { insertOrUpdateJobs } from "./database-sqlite.js";
+import database from "../databases/database-git.js";
+import { insertOrUpdateJobs } from "../databases/database-sqlite.js";
 import dotenv from "dotenv";
 const config = dotenv.config();
 

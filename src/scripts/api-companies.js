@@ -1,6 +1,6 @@
 import { writeFile, mkdirSync, existsSync } from "fs";
 
-import database from "./database-git.js";
+import database from "../databases/database-git.js";
 
 const init = async () => {
 	/* based on gitlab artifact strategy */
@@ -37,10 +37,10 @@ const init = async () => {
 				console.log(`Error writing companies file: ${error}`);
 			} else {
 				console.log(
-					`Wrote file at ${dirArtifacts}/${fileName} with ${companies.length} companies`
+					`Wrote file at ${dirArtifacts}/${fileName} with ${companies.length} companies`,
 				);
 			}
-		}
+		},
 	);
 };
 

@@ -8,10 +8,7 @@ save-database:on-schedule:
     - if: $CI_PIPELINE_SOURCE == "schedule"
   script:
     - npm install
-    - npm run save-companies
-    - npm run save-jobs
-    - npm run analyze-companies
-    - npm run analyze-jobs
+    - npm run build-db
     - mkdir -p public
     - mv joblist.db public/
   artifacts:
