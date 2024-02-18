@@ -11,6 +11,11 @@ variables:
 
 image: node:latest
 
+cache:
+  key: joblist-db
+  paths:
+    - joblist.db
+
 save:on-schedule:
   stage: save
   rules:
