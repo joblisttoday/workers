@@ -33,7 +33,6 @@ install-dependencies:on-schedule:
 
 github-data:on-schedule:
   stage: dependencies
-  needs: ["install-dependencies"]
   rules:
     - if: $CI_PIPELINE_SOURCE == "schedule"
   script:
@@ -54,7 +53,6 @@ save-companies:on-schedule:
 
 save-jobs:on-schedule:
   stage: save
-  needs: ["save-companies"]
   parallel: 10
   rules:
     - if: $CI_PIPELINE_SOURCE == "schedule"
