@@ -41,3 +41,12 @@ the client (which fetches the latest).
 - run `sqlite3 joblist.db` to create/open/use the database.
 - run `npm run save-companies` or `npm run save-jobs` to load the
   database with its data
+
+### Tips
+
+export to json with sqlite
+
+```bash
+sqlite3 joblist.db '.mode json' '.once out.json' 'select * from companies'
+```
+> [source](https://stackoverflow.com/questions/5491858/how-to-export-sqlite-to-json)
