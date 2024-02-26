@@ -16,13 +16,25 @@ cache:
   paths:
     - joblist.db
 
-save:on-schedule:
-  stage: save
+install-dependencies:on-schedule:
+  stage: .pre
   rules:
     - if: $CI_PIPELINE_SOURCE == "schedule"
   script:
     - npm install
+
+save-companies:on-schedule:
+  stage: save
+  rules:
+    - if: $CI_PIPELINE_SOURCE == "schedule"
+  script:
     - npm run save-companies
+
+save-jobs:on-schedule:
+  stage: save
+  rules:
+    - if: $CI_PIPELINE_SOURCE == "schedule"
+  script:
     - npm run save-jobs
 
 processing:on-schedule:
@@ -30,7 +42,6 @@ processing:on-schedule:
   rules:
     - if: $CI_PIPELINE_SOURCE == "schedule"
   script:
-    - npm install
     - npm run processing-companies
     - npm run processing-jobs
 
