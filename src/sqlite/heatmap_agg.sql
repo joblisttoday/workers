@@ -2,7 +2,7 @@
 CREATE TABLE heatmap_agg AS
 
 WITH RECURSIVE dates(date) AS (
-    SELECT DATE('now', '-1 month')  -- Start date
+    SELECT DATE('now', '-1 year')  -- Start date
     UNION ALL
     SELECT DATE(date, '+1 day')     -- Recursive increment by one day
     FROM dates
