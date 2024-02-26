@@ -2,7 +2,10 @@ import "../utils/fetch-polyfill.js";
 import "../utils/domparser-polyfill.js";
 
 import database from "../databases/database-git.js";
-import { insertOrUpdateJobs } from "../databases/database-sqlite.js";
+import {
+	executeSqlFile,
+	insertOrUpdateJobs,
+} from "../databases/database-sqlite.js";
 import dotenv from "dotenv";
 const config = dotenv.config();
 
@@ -11,7 +14,10 @@ import joblist from "@joblist/components";
 const { providers } = joblist;
 
 const init = async () => {
-	await database.cloneDatabase();
+	await executeSqlFile("jobs_table.sql");
+	await executeSqlFile("jobs_fts_table.sql");
+	await executeSqlFile("jobs_trigger.sql");
+
 	const companies = await database.getAllCompaniesWithProvider();
 	const allCompaniesGetJobs = companies.reduce((acc, company) => {
 		const companyProvider = company["job_board_provider"];

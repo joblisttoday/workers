@@ -67,35 +67,13 @@ const insertOrUpdateJob = async (job) => {
 	await insertOrUpdate("jobs", fields, values, "objectID");
 };
 
-/* executed each time this file is imported */
-const createTables = async () => {
-	await executeSqlFile("companies_table.sql");
-	await executeSqlFile("jobs_table.sql");
-};
-
-const createFTSTables = async () => {
-	await executeSqlFile("companies_fts_table.sql");
-	await executeSqlFile("jobs_fts_table.sql");
-};
-
-const createTriggers = async () => {
-	await executeSqlFile("companies_trigger.sql");
-	await executeSqlFile("jobs_trigger.sql");
-};
-
-const setupTables = async () => {
-	await createTables();
-	await createFTSTables();
-	await createTriggers();
-};
-
 /*
 	 initialize the database connection and
 	 set up the tables when this module is imported.
  */
 await (async () => {
+	// clonedatabase
 	await initDb();
-	await setupTables();
 })();
 
 export {
