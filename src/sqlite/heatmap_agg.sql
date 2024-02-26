@@ -1,4 +1,4 @@
-CREATE TABLE heatmap_agg AS
+CREATE TABLE IF NOT EXISTS heatmap_agg AS
 
 WITH RECURSIVE dates(date) AS (
     SELECT DATE('now', '-1 year')  -- Start date
