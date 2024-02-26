@@ -40,10 +40,10 @@ github-data:on-schedule:
     - npm run database-git
   cache:
     paths:
-      - .db
+      - .db/
   artifacts:
     paths:
-      - .db
+      - .db/
 
 save-companies:on-schedule:
   stage: save
