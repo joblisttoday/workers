@@ -34,6 +34,14 @@ processing:on-schedule:
     - npm run processing-companies
     - npm run processing-jobs
 
+heatmap:on-schedule:
+  stage: analyze
+  rules:
+    - if: $CI_PIPELINE_SOURCE == "schedule"
+  script:
+    - npm install
+    - npm run heatmap-agg
+
 analyze:on-schedule:
   stage: analyze
   rules:
@@ -42,14 +50,6 @@ analyze:on-schedule:
     - npm install
     - npm run analyze-companies
     - npm run analyze-jobs
-
-heatmap:on-schedule:
-  stage: heatmap
-  rules:
-    - if: $CI_PIPELINE_SOURCE == "schedule"
-  script:
-    - npm install
-    - npm run heatmap-agg
 
 pages:
   stage: deploy
