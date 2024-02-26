@@ -1,4 +1,3 @@
--- Create a temporary calendar table with all dates within the specified range
 CREATE TABLE heatmap_agg AS
 
 WITH RECURSIVE dates(date) AS (
@@ -7,10 +6,10 @@ WITH RECURSIVE dates(date) AS (
     SELECT DATE(date, '+1 day')     -- Recursive increment by one day
     FROM dates
     WHERE date < DATE('now')         -- End date
-), 
+),
 company_slugs AS (
-    SELECT DISTINCT 
-        company_slug 
+    SELECT DISTINCT
+        company_slug
     FROM jobs
 )
 SELECT
@@ -24,7 +23,7 @@ SELECT
     strftime('%W', c.date) AS woy
 FROM dates c
 CROSS JOIN company_slugs s
-LEFT JOIN jobs j 
+LEFT JOIN jobs j
     ON DATE(j.published_date) = c.date
         AND j.company_slug = s.company_slug
 GROUP BY
