@@ -1,7 +1,7 @@
 CREATE TABLE IF NOT EXISTS heatmap_agg AS
 
 WITH RECURSIVE dates(date) AS (
-    SELECT DATE('now', '-1 year')  -- Start date
+    SELECT DATE('now', '-365 day')  -- Start date
     UNION ALL
     SELECT DATE(date, '+1 day')     -- Recursive increment by one day
     FROM dates
@@ -14,11 +14,11 @@ company_slugs AS (
 )
 SELECT
     c.date AS date,
-    s.company_slug AS job_company_slug,
+    s.company_slug AS slug,
     COUNT(j.ObjectId) AS total,
     strftime('%Y', c.date) AS year,
     strftime('%m', c.date) AS month,
-    strftime('%d', c.date) AS day,
+    strftime('%w', c.date) AS dow,
     strftime('%j', c.date) AS doy,
     strftime('%W', c.date) AS woy
 FROM dates c
