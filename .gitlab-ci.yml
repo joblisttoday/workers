@@ -1,6 +1,7 @@
 ---
 ---
 stages:
+  - dependencies
   - save
   - processing
   - analyze
@@ -17,11 +18,18 @@ cache:
     - joblist.db
 
 install-dependencies:on-schedule:
-  stage: .pre
+  stage: dependencies
   rules:
     - if: $CI_PIPELINE_SOURCE == "schedule"
   script:
     - npm install
+  cache:
+    paths:
+      - node_modules/
+  artifacts:
+    untracked: true
+    paths:
+     - node_modules/
 
 save-companies:on-schedule:
   stage: save
