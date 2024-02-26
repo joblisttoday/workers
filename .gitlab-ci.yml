@@ -86,6 +86,7 @@ pages:
   script:
     - mkdir -p public
     - mv joblist.db public/
+    - mv .db public/
   artifacts:
     paths:
       - public
