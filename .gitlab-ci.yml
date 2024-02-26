@@ -29,7 +29,22 @@ install-dependencies:on-schedule:
   artifacts:
     untracked: true
     paths:
-     - node_modules/
+      - node_modules/
+
+github-data:on-schedule:
+  stage: dependencies
+  dependencies:
+    - install-dependencies
+  rules:
+    - if: $CI_PIPELINE_SOURCE == "schedule"
+  script:
+    - npm run database-git
+  cache:
+    paths:
+      - .db
+  artifacts:
+    paths:
+      - .db
 
 save-companies:on-schedule:
   stage: save
@@ -40,6 +55,8 @@ save-companies:on-schedule:
 
 save-jobs:on-schedule:
   stage: save
+  dependencies:
+    - save-companies
   rules:
     - if: $CI_PIPELINE_SOURCE == "schedule"
   script:
