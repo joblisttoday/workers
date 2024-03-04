@@ -57,7 +57,8 @@ save-jobs:on-schedule:
   script:
     - npm run save-jobs
   artifacts:
-    - .db-sqlite/
+    paths:
+      - .db-sqlite/
 
 processing-jobs:on-schedule:
   stage: processing
