@@ -37,7 +37,6 @@ github-data:on-schedule:
     - if: $CI_PIPELINE_SOURCE == "schedule"
   script:
     - npm run database-git
-  needs: ["install-dependencies:on-schedule"]
   cache:
     paths:
       - .db-github-data/
