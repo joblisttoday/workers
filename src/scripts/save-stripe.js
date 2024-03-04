@@ -1,4 +1,4 @@
-import dotenv from "dotenv";
+import "dotenv/config";
 import { subDays } from "date-fns";
 import {
 	initStripe,
@@ -10,9 +10,7 @@ import {
 } from "../utils/stripe.js";
 
 const { COMPANY_HIGHLIGHT } = CS_CF_DICT;
-
-const { parsed } = dotenv.config();
-const { STRIPE_SECRET } = parsed;
+const { STRIPE_SECRET } = process.env;
 
 const init = async () => {
 	const stripe = initStripe(STRIPE_SECRET);

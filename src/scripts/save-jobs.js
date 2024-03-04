@@ -6,8 +6,6 @@ import {
 	executeSqlFile,
 	insertOrUpdateJobs,
 } from "../databases/database-sqlite.js";
-import dotenv from "dotenv";
-const config = dotenv.config();
 
 import joblist from "@joblist/components";
 

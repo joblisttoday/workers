@@ -7,10 +7,6 @@ import {
 	insertOrUpdateCompanies,
 } from "../databases/database-sqlite.js";
 
-import dotenv from "dotenv";
-
-const config = dotenv.config();
-
 const init = async () => {
 	await executeSqlFile("companies_table.sql");
 	await executeSqlFile("companies_fts_table.sql");
