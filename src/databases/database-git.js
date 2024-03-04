@@ -119,8 +119,9 @@ export const getFileContents = (dir, fileNames) => {
 			console.error("Error reading files", err);
 		}
 
-		let frontMatter = matter(content);
-		return serializeJson(frontMatter);
+		let frontMatter = serializeJson(matter(content));
+		frontMatter.slug = name;
+		return frontMatter;
 	});
 
 	return fileContents;
