@@ -33,11 +33,11 @@ install-dependencies:on-schedule:
 
 github-data:on-schedule:
   stage: dependencies
-  needs: ["install-dependencies"]
   rules:
     - if: $CI_PIPELINE_SOURCE == "schedule"
   script:
     - npm run database-git
+  needs: ["install-dependencies"]
   cache:
     paths:
       - .db-github-data/
@@ -47,11 +47,11 @@ github-data:on-schedule:
 
 database-stripe:on-schedule:
   stage: dependencies
-  needs: ["install-dependencies"]
   rules:
     - if: $CI_PIPELINE_SOURCE == "schedule"
   script:
     - npm run database-stripe
+  needs: ["install-dependencies"]
   cache:
     paths:
       - .db-sqlite/
