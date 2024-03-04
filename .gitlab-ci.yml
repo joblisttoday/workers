@@ -66,7 +66,7 @@ processing:on-schedule:
     - npm run processing-companies
     - npm run processing-jobs
 
-heatmap:on-schedule:
+.heatmap:on-schedule:
   stage: analyze
   rules:
     - if: $CI_PIPELINE_SOURCE == "schedule"
