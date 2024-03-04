@@ -1,4 +1,4 @@
-/* convert created_at from epoch to date when value starts by 1 */
+-- convert created_at from epoch to date when value starts by 1
 UPDATE companies
 SET created_at = (
 		CASE
