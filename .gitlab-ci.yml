@@ -13,9 +13,10 @@ variables:
 image: node:latest
 
 cache:
-  key: .db-sqlite
   paths:
-    - .db-sqlite/*
+    - node_modules/
+    - .db-github-data/
+    - .db-sqlite/
 
 install-dependencies:on-schedule:
   stage: dependencies
@@ -23,13 +24,6 @@ install-dependencies:on-schedule:
     - if: $CI_PIPELINE_SOURCE == "schedule"
   script:
     - npm install
-  cache:
-    paths:
-      - node_modules/
-  artifacts:
-    untracked: true
-    paths:
-      - node_modules/
 
 github-data:on-schedule:
   stage: dependencies
@@ -38,12 +32,6 @@ github-data:on-schedule:
     - if: $CI_PIPELINE_SOURCE == "schedule"
   script:
     - npm run database-git
-  cache:
-    paths:
-      - .db-github-data/
-  artifacts:
-    paths:
-      - .db-github-data/
 
 database-stripe:on-schedule:
   stage: dependencies
@@ -52,12 +40,6 @@ database-stripe:on-schedule:
     - if: $CI_PIPELINE_SOURCE == "schedule"
   script:
     - npm run database-stripe
-  cache:
-    paths:
-      - .db-sqlite/
-  artifacts:
-    paths:
-      - .db-sqlite/
 
 save-companies:on-schedule:
   stage: save
