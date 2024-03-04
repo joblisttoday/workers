@@ -82,7 +82,7 @@ processing-companies:on-schedule:
     - npm run processing-companies
   needs: ["save-companies:on-schedule"]
 
-processing-jobs:on-schedule:
+.processing-jobs:on-schedule:
   stage: processing
   rules:
     - if: $CI_PIPELINE_SOURCE == "schedule"
