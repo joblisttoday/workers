@@ -13,6 +13,7 @@ variables:
 image: node:latest
 
 cache:
+  key: joblist-private-cache
   paths:
     - node_modules/
     - .db-github-data/
