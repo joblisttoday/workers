@@ -64,22 +64,39 @@ save-companies:on-schedule:
     - if: $CI_PIPELINE_SOURCE == "schedule"
   script:
     - npm run save-companies
+  needs: ["github-data:on-schedule"]
 
-save-jobs:on-schedule:
+.save-jobs:on-schedule:
   stage: save
   rules:
     - if: $CI_PIPELINE_SOURCE == "schedule"
   script:
     - npm run save-jobs
+  needs: ["github-data:on-schedule"]
 
-processing:on-schedule:
+processing-companies:on-schedule:
   stage: processing
   rules:
     - if: $CI_PIPELINE_SOURCE == "schedule"
   script:
     - npm run processing-companies
+  needs: ["save-companies:on-schedule"]
+
+processing-jobs:on-schedule:
+  stage: processing
+  rules:
+    - if: $CI_PIPELINE_SOURCE == "schedule"
+  script:
     - npm run processing-jobs
+  needs: ["save-jobs:on-schedule"]
+
+processing-stripe-companies:on-schedule:
+  stage: processing
+  rules:
+    - if: $CI_PIPELINE_SOURCE == "schedule"
+  script:
     - npm run processing-stripe
+  needs: ["processing-companies:on-schedule"]
 
 .heatmap:on-schedule:
   stage: analyze
