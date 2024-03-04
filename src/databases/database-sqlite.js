@@ -77,7 +77,6 @@ const insertOrUpdateJob = async (db, job) => {
 const insertOrUpdateCompanyToHighlight = async (db, checkoutSessionCompany) => {
 	const fields = Object.keys(checkoutSessionCompany);
 	const values = Object.values(checkoutSessionCompany);
-	console.log(fields, values);
 	await insertOrUpdate(db, "highlight_companies", fields, values, "slug");
 };
 

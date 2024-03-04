@@ -75,9 +75,7 @@ const getCompaniesToHighlight = async () => {
 const init = async () => {
 	const companiesToHighlight = await getCompaniesToHighlight();
 	companiesToHighlight.forEach(async (company) => {
-		if (company.slug) {
-			console.info("Should highlight company", company);
-		} else {
+		if (!company.slug) {
 			console.info(
 				"Cannot highlight company (see checkout session id)",
 				company,
@@ -85,10 +83,7 @@ const init = async () => {
 		}
 	});
 	const stripeDb = await initDb();
-	console.log("stripeDb", stripeDb);
 	await executeSqlFile(stripeDb, "stripe/highlight_companies_table.sql");
-	console.log("-------------------------------------------------");
-	console.log("companiesToHighlight", companiesToHighlight);
 	await insertOrUpdateCompaniesToHighlight(stripeDb, companiesToHighlight);
 };
 

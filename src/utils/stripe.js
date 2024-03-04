@@ -17,7 +17,6 @@ export const getCompanyHighlight = (fieldValue) => {
 	try {
 		const url = new URL(`https://example.org/${val}`);
 		companySlug = url.pathname.split("/")[1];
-		console.log("companySlug", companySlug);
 	} catch (e) {
 		console.info("Invalid company highlight custom field value");
 	}
