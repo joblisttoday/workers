@@ -1,0 +1,2 @@
+# the sqlite db are generated in this folder
+# then the "joblist.db" is published as gitlab page artifact

@@ -2,11 +2,11 @@
 node_modules/
 
 # the cloned git "data" repo used as database
-.db/
+.db-github-data/
 
 # generated sqlite3 database (& recovory) files
-joblist.db
-joblist.db-journal
+.db-sqlite/*.db
+.db-sqlite/*.db-journal
 
 # the artifacts for gitlab ci
 public/

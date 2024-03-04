@@ -13,9 +13,9 @@ variables:
 image: node:latest
 
 cache:
-  key: joblist-db
+  key: .db-sqlite
   paths:
-    - joblist.db
+    - .db-sqlite/*
 
 install-dependencies:on-schedule:
   stage: dependencies
@@ -39,10 +39,10 @@ github-data:on-schedule:
     - npm run database-git
   cache:
     paths:
-      - .db/
+      - .db-github-data/
   artifacts:
     paths:
-      - .db/
+      - .db-github-data/
 
 save-companies:on-schedule:
   stage: save
@@ -72,6 +72,7 @@ processing:on-schedule:
   script:
     - npm run processing-companies
     - npm run processing-jobs
+    - npm run processing-stripe
 
 .heatmap:on-schedule:
   stage: analyze
@@ -92,8 +93,7 @@ pages:
   stage: deploy
   script:
     - mkdir -p public
-    - mv joblist.db public/
-    - mv .db public/
+    - mv .db-sqlite/joblist.db public/
   artifacts:
     paths:
       - public

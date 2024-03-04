@@ -38,15 +38,26 @@ wasm](https://www.npmjs.com/package/@sqlite.org/sqlite-wasm) database.
 It is stored as an artifact in gitlab workers repo, then fetched by
 the client (which fetches the latest).
 
-- run `sqlite3 joblist.db` to create/open/use the database.
+- run `sqlite3 .db-sqlite/joblist.db` to create/open/use the database.
 - run `npm run save-companies` or `npm run save-jobs` to load the
   database with its data
 
 ### Tips
 
-export to json with sqlite
+#### export to json with sqlite
 
 ```bash
-sqlite3 joblist.db '.mode json' '.once out.json' 'select * from companies'
+sqlite3 .db-sqlite/joblist.db '.mode json' '.once out.json' 'select * from companies'
 ```
 > [source](https://stackoverflow.com/questions/5491858/how-to-export-sqlite-to-json)
+
+#### attach an other db with sqlite
+
+```bash
+sqlite .db-sqlite/joblist.db
+```
+then in the sqlite3 shell
+```bash
+ATTACH DATABASE '.db-sqlite/stripe.db' AS stripeDb;
+select * from stripeDb.highlight_companies;
+```

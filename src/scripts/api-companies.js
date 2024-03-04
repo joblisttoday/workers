@@ -1,5 +1,4 @@
 import { writeFile, mkdirSync, existsSync } from "fs";
-
 import database from "../databases/database-git.js";
 
 const init = async () => {

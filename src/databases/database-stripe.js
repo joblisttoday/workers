@@ -1,4 +1,12 @@
 import { Stripe } from "stripe";
+import { initDb as initSqliteDb } from "./database-sqlite.js";
+
+/* where we store the result of stripe api queries, and our transformations */
+const databaseFileName = "stripe.db";
+
+export const initDb = (database = databaseFileName) => {
+	return initSqliteDb(database);
+};
 
 export const initStripe = (secret) => {
 	return new Stripe(secret);

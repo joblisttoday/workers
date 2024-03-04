@@ -1,9 +1,16 @@
 import "dotenv/config";
 import { subDays } from "date-fns";
 import {
+	initDb,
 	initStripe,
 	gatherCheckoutSessions,
 } from "../databases/database-stripe.js";
+
+import {
+	executeSqlFile,
+	insertOrUpdateCompaniesToHighlight,
+} from "../databases/database-sqlite.js";
+
 import {
 	CS_CF_DICT,
 	getCheckoutSessionsCustomFields,
@@ -12,7 +19,7 @@ import {
 const { COMPANY_HIGHLIGHT } = CS_CF_DICT;
 const { STRIPE_SECRET } = process.env;
 
-const init = async () => {
+const getCompaniesToHighlight = async () => {
 	const stripe = initStripe(STRIPE_SECRET);
 	const timestamp = subDays(new Date(), 31).getTime();
 	const checkoutSessions = await gatherCheckoutSessions(stripe, {
@@ -56,14 +63,17 @@ const init = async () => {
 		);
 	}
 
-	const companiesToHighlight = csWithCustomFields
+	return csWithCustomFields
 		.map((checkoutSession) => {
 			const { id: cs_id, custom_fields } = checkoutSession;
 			const companyHighlightSlug = custom_fields[0][COMPANY_HIGHLIGHT];
 			return { cs_id, slug: companyHighlightSlug };
 		})
 		.filter(({ slug }) => !!slug);
+};
 
+const init = async () => {
+	const companiesToHighlight = await getCompaniesToHighlight();
 	companiesToHighlight.forEach(async (company) => {
 		if (company.slug) {
 			console.info("Should highlight company", company);
@@ -74,6 +84,12 @@ const init = async () => {
 			);
 		}
 	});
+	const stripeDb = await initDb();
+	console.log("stripeDb", stripeDb);
+	await executeSqlFile(stripeDb, "stripe/highlight_companies_table.sql");
+	console.log("-------------------------------------------------");
+	console.log("companiesToHighlight", companiesToHighlight);
+	await insertOrUpdateCompaniesToHighlight(stripeDb, companiesToHighlight);
 };
 
 init();

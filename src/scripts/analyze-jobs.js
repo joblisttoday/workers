@@ -1,8 +1,9 @@
-import { executeSqlFile } from "../databases/database-sqlite.js";
+import { initDb, executeSqlFile } from "../databases/database-sqlite.js";
 
 const init = async () => {
-	await executeSqlFile("jobs_analyze_table.sql");
-	await executeSqlFile("jobs_analyze.sql");
+	const db = await initDb();
+	await executeSqlFile(db, "jobs_analyze_table.sql");
+	await executeSqlFile(db, "jobs_analyze.sql");
 };
 init();
 

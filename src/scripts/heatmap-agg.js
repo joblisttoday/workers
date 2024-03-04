@@ -1,7 +1,8 @@
-import { executeSqlFile } from "../databases/database-sqlite.js";
+import { initDb, executeSqlFile } from "../databases/database-sqlite.js";
 
 const init = async () => {
-	await executeSqlFile("heatmap_agg.sql");
+	const db = await initDb();
+	await executeSqlFile(db, "heatmap_agg.sql");
 };
 init();
 

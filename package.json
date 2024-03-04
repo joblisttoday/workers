@@ -13,6 +13,7 @@
 		"save-stripe": "node src/scripts/save-stripe.js",
 		"processing-companies": "node src/scripts/processing-companies.js",
 		"processing-jobs": "node src/scripts/processing-jobs.js",
+		"processing-stripe": "node src/scripts/processing-stripe.js",
 		"analyze-companies": "node src/scripts/analyze-companies.js",
 		"analyze-jobs": "node src/scripts/analyze-jobs.js",
 		"UNUSED-JOBS": "echo 'Jobs below are not used'",

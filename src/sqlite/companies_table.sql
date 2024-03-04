@@ -16,5 +16,6 @@ CREATE TABLE IF NOT EXISTS companies (
 	facebook_url TEXT,
 	github_url TEXT,
 	wikipedia_url TEXT,
-	positions TEXT
+	positions TEXT,
+	is_highlighted BOOLEAN CHECK (is_highlighted IN (0, 1))
 );

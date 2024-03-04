@@ -3,16 +3,18 @@ import "../utils/domparser-polyfill.js";
 
 import database from "../databases/database-git.js";
 import {
+	initDb,
 	executeSqlFile,
 	insertOrUpdateCompanies,
 } from "../databases/database-sqlite.js";
 
 const init = async () => {
-	await executeSqlFile("companies_table.sql");
-	await executeSqlFile("companies_fts_table.sql");
-	await executeSqlFile("companies_trigger.sql");
+	const db = await initDb();
+	await executeSqlFile(db, "companies_table.sql");
+	await executeSqlFile(db, "companies_fts_table.sql");
+	await executeSqlFile(db, "companies_trigger.sql");
 	const companies = await database.getAllCompanies();
-	await insertOrUpdateCompanies(companies);
+	await insertOrUpdateCompanies(db, companies);
 	// no need to serialize companies, lets do it at the level of sql
 };
 

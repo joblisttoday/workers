@@ -3,6 +3,7 @@ import "../utils/domparser-polyfill.js";
 
 import database from "../databases/database-git.js";
 import {
+	initDb,
 	executeSqlFile,
 	insertOrUpdateJobs,
 } from "../databases/database-sqlite.js";
@@ -12,9 +13,10 @@ import joblist from "@joblist/components";
 const { providers } = joblist;
 
 const init = async () => {
-	await executeSqlFile("jobs_table.sql");
-	await executeSqlFile("jobs_fts_table.sql");
-	await executeSqlFile("jobs_trigger.sql");
+	const db = await initDb();
+	await executeSqlFile(db, "jobs_table.sql");
+	await executeSqlFile(db, "jobs_fts_table.sql");
+	await executeSqlFile(db, "jobs_trigger.sql");
 
 	const companies = await database.getAllCompaniesWithProvider();
 	const allCompaniesGetJobs = companies.reduce((acc, company) => {
@@ -47,7 +49,7 @@ const init = async () => {
 		});
 	});
 	const serializedJobs = serializeJobs(allJobs);
-	await insertOrUpdateJobs(serializedJobs);
+	await insertOrUpdateJobs(db, serializedJobs);
 };
 
 // we serialize the jobs to `_` notation
