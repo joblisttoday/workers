@@ -34,8 +34,9 @@ data:on-schedule:
     - npm run database-git
     - npm run database-stripe
   artifacts:
-    - .db-github-data/
-    - .db-sqlite/
+    paths:
+      - .db-github-data/
+      - .db-sqlite/
 
 save-companies:on-schedule:
   stage: save
@@ -45,7 +46,8 @@ save-companies:on-schedule:
   script:
     - npm run save-companies
   artifacts:
-    - .db-sqlite/
+    paths:
+      - .db-sqlite/
 
 save-jobs:on-schedule:
   stage: save
@@ -68,7 +70,8 @@ processing-jobs:on-schedule:
     - npm run processing-stripe
     # - npm run heatmap-agg
   artifacts:
-    - .db-sqlite/
+    paths:
+      - .db-sqlite/
 
 analyze:on-schedule:
   stage: analyze
@@ -78,7 +81,8 @@ analyze:on-schedule:
     - npm run analyze-companies
     - npm run analyze-jobs
   artifacts:
-    - .db-sqlite/
+    paths:
+      - .db-sqlite/
 
 pages:
   stage: deploy
