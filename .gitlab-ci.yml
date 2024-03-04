@@ -58,6 +58,13 @@ save-jobs:on-schedule:
   script:
     - npm run save-jobs
 
+save-stripe:on-schedule:
+  stage: save
+  rules:
+    - if: $CI_PIPELINE_SOURCE == "schedule"
+  script:
+    - npm run save-stripe
+
 processing:on-schedule:
   stage: processing
   rules:

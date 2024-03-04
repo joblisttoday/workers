@@ -5,14 +5,17 @@
 	"main": "src/index.js",
 	"type": "module",
 	"scripts": {
+		"help": "echo 'Run the command `npm run` to see all jobs, ordered by run-order'",
 		"build-db": "./src/scripts/build-db.sh",
 		"database-git": "node src/scripts/database-git.js",
 		"save-companies": "node src/scripts/save-companies.js",
 		"save-jobs": "node src/scripts/save-jobs.js",
+		"save-stripe": "node src/scripts/save-stripe.js",
 		"processing-companies": "node src/scripts/processing-companies.js",
 		"processing-jobs": "node src/scripts/processing-jobs.js",
 		"analyze-companies": "node src/scripts/analyze-companies.js",
 		"analyze-jobs": "node src/scripts/analyze-jobs.js",
+		"UNUSED-JOBS": "echo 'Jobs below are not used'",
 		"convert-positions": "node src/scripts/convert-positions.js",
 		"heatmap-agg": "node src/scripts/heatmap-agg.js",
 		"api-companies": "node src/scripts/api-companies.js"
@@ -29,13 +32,15 @@
 	"homepage": "https://gitlab.com/joblist/workers#readme",
 	"dependencies": {
 		"@joblist/components": "^0.0.13",
+		"date-fns": "^3.3.1",
 		"dotenv": "^16.3.1",
 		"gray-matter": "^4.0.3",
 		"jsdom": "^22.1.0",
 		"node-fetch": "^3.3.2",
 		"simple-git": "^3.19.1",
 		"sqlite": "^5.0.1",
-		"sqlite3": "^5.1.6"
+		"sqlite3": "^5.1.6",
+		"stripe": "^14.19.0"
 	},
 	"prettier": {}
 }
