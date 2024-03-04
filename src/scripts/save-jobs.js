@@ -1,7 +1,7 @@
 import "../utils/fetch-polyfill.js";
 import "../utils/domparser-polyfill.js";
 
-import database from "../databases/database-git.js";
+import { getAllCompaniesWithProvider } from "../databases/database-git.js";
 import {
 	initDb,
 	executeSqlFile,
@@ -18,7 +18,7 @@ const init = async () => {
 	await executeSqlFile(db, "jobs_fts_table.sql");
 	await executeSqlFile(db, "jobs_trigger.sql");
 
-	const companies = await database.getAllCompaniesWithProvider();
+	const companies = await getAllCompaniesWithProvider();
 	const allCompaniesGetJobs = companies.reduce((acc, company) => {
 		const companyProvider = company["job_board_provider"];
 		const provider = providers[companyProvider];
