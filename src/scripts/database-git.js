@@ -1,7 +1,9 @@
-import database from "../databases/database-git.js";
+import { cloneDatabase, getAllCompanies } from "../databases/database-git.js";
 
 const init = async () => {
-	await database.cloneDatabase();
+	await await cloneDatabase();
+	const companies = await getAllCompanies();
+	console.info("Total companies in github data", companies.length);
 };
 
 init();

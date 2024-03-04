@@ -1,8 +1,12 @@
-import database from "../databases/database-git.js";
+import {
+	cloneDatabase,
+	getAllCompanies,
+	saveNewCompanies,
+} from "../databases/database-git.js";
 
 const init = async () => {
 	try {
-		await database.cloneDatabase();
+		await cloneDatabase();
 	} catch (error) {
 		console.log("Error cloning new database", error);
 		return;
@@ -10,7 +14,7 @@ const init = async () => {
 
 	let companies;
 	try {
-		companies = await database.getAllCompanies();
+		companies = await getAllCompanies();
 	} catch (error) {
 		console.log("Error getting companies from local folder", error);
 		return;
@@ -19,7 +23,7 @@ const init = async () => {
 	const sCompanies = companies.map(serializeCompany);
 
 	try {
-		await database.saveNewCompanies(sCompanies);
+		await saveNewCompanies(sCompanies);
 	} catch (error) {
 		console.log("Error saving new companies", error);
 		return;

@@ -1,5 +1,5 @@
 import { writeFile, mkdirSync, existsSync } from "fs";
-import database from "../databases/database-git.js";
+import { cloneDatabase, getAllCompanies } from "../databases/database-git.js";
 
 const init = async () => {
 	/* based on gitlab artifact strategy */
@@ -7,7 +7,7 @@ const init = async () => {
 	const fileName = "companies.json";
 
 	try {
-		await database.cloneDatabase();
+		await cloneDatabase();
 	} catch (error) {
 		console.log("Error cloning new database", error);
 		return;
@@ -15,7 +15,7 @@ const init = async () => {
 
 	let companies;
 	try {
-		companies = await database.getAllCompanies();
+		companies = await getAllCompanies();
 	} catch (error) {
 		console.log("Error getting companies from local folder", error);
 		return;

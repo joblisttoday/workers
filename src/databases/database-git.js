@@ -10,7 +10,7 @@ const databaseDir = "./.db-github-data";
 const databaseDirCompanies = `${databaseDir}/companies`;
 const fileExtension = "md";
 
-const getAllCompaniesWithProvider = async () => {
+export const getAllCompaniesWithProvider = async () => {
 	const fileNames = getFileNames(databaseDirCompanies);
 	const jsonContent = getFileContents(databaseDirCompanies, fileNames).filter(
 		(company) => {
@@ -20,13 +20,13 @@ const getAllCompaniesWithProvider = async () => {
 	return jsonContent;
 };
 
-const getAllCompanies = async () => {
+export const getAllCompanies = async () => {
 	const fileNames = getFileNames(databaseDirCompanies);
 	const jsonContent = getFileContents(databaseDirCompanies, fileNames);
 	return jsonContent;
 };
 
-const saveNewCompanies = async (companies) => {
+export const saveNewCompanies = async (companies) => {
 	const dirNewCompanies = `${databaseDir}/companies-new`;
 
 	try {
@@ -80,7 +80,7 @@ const saveNewCompanies = async (companies) => {
 	});
 };
 
-const cloneDatabase = async () => {
+export const cloneDatabase = async () => {
 	try {
 		rmSync(databaseDir, { recursive: true, force: true });
 	} catch (error) {
@@ -96,7 +96,7 @@ const cloneDatabase = async () => {
 	}
 };
 
-const getFileNames = (dir) => {
+export const getFileNames = (dir) => {
 	let fileNames = null;
 	try {
 		fileNames = readdirSync(dir);
@@ -106,11 +106,12 @@ const getFileNames = (dir) => {
 	return fileNames;
 };
 
-const getFileContents = (dir, fileNames) => {
-	const filePaths = fileNames.map(
-		(name) => `${dir}/${name}/index.${fileExtension}`,
-	);
-	const fileContents = filePaths.map((path) => {
+export const getFileContents = (dir, fileNames) => {
+	const filePaths = fileNames.map((name) => ({
+		name,
+		path: `${dir}/${name}/index.${fileExtension}`,
+	}));
+	const fileContents = filePaths.map(({ name, path }) => {
 		let content = null;
 		try {
 			content = readFileSync(path, "utf-8");
@@ -125,7 +126,7 @@ const getFileContents = (dir, fileNames) => {
 	return fileContents;
 };
 
-const serializeJson = (item) => {
+export const serializeJson = (item) => {
 	return {
 		title: item.data["title"],
 		slug: item.data["slug"],
@@ -143,11 +144,4 @@ const serializeJson = (item) => {
 		created_at: item.data["created_at"],
 		updated_at: item.data["updated_at"],
 	};
-};
-
-export default {
-	cloneDatabase,
-	getAllCompanies,
-	getAllCompaniesWithProvider,
-	saveNewCompanies,
 };
