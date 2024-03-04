@@ -12,12 +12,11 @@ variables:
 
 image: node:latest
 
+# shared across branches, pipelines and jobs
 cache:
-  key: joblist-private-cache
+  key: $CI_COMMIT_REF_SLUG
   paths:
     - node_modules/
-    - .db-github-data/
-    - .db-sqlite/
 
 install-dependencies:on-schedule:
   stage: dependencies
@@ -26,68 +25,50 @@ install-dependencies:on-schedule:
   script:
     - npm install
 
-github-data:on-schedule:
+data:on-schedule:
   stage: dependencies
   needs: ["install-dependencies:on-schedule"]
   rules:
     - if: $CI_PIPELINE_SOURCE == "schedule"
   script:
     - npm run database-git
-
-database-stripe:on-schedule:
-  stage: dependencies
-  needs: ["install-dependencies:on-schedule"]
-  rules:
-    - if: $CI_PIPELINE_SOURCE == "schedule"
-  script:
     - npm run database-stripe
+  artifacts:
+    - .db-github-data/
+    - .db-sqlite/
 
 save-companies:on-schedule:
   stage: save
-  needs: ["github-data:on-schedule"]
+  needs: ["data:on-schedule"]
   rules:
     - if: $CI_PIPELINE_SOURCE == "schedule"
   script:
     - npm run save-companies
+  artifacts:
+    - .db-sqlite/
 
-.save-jobs:on-schedule:
+save-jobs:on-schedule:
   stage: save
-  needs: ["github-data:on-schedule"]
+  needs: ["save-companies:on-schedule", "data:on-schedule"]
   rules:
     - if: $CI_PIPELINE_SOURCE == "schedule"
   script:
     - npm run save-jobs
+  artifacts:
+    - .db-sqlite/
 
-processing-companies:on-schedule:
-  stage: processing
-  needs: ["save-companies:on-schedule"]
-  rules:
-    - if: $CI_PIPELINE_SOURCE == "schedule"
-  script:
-    - npm run processing-companies
-
-.processing-jobs:on-schedule:
+processing-jobs:on-schedule:
   stage: processing
   needs: ["save-jobs:on-schedule"]
   rules:
     - if: $CI_PIPELINE_SOURCE == "schedule"
   script:
+    - npm run processing-companies
     - npm run processing-jobs
-
-processing-stripe-companies:on-schedule:
-  stage: processing
-  needs: ["processing-companies:on-schedule"]
-  rules:
-    - if: $CI_PIPELINE_SOURCE == "schedule"
-  script:
     - npm run processing-stripe
-
-.heatmap:on-schedule:
-  stage: analyze
-  rules:
-    - if: $CI_PIPELINE_SOURCE == "schedule"
-  script:
-    - npm run heatmap-agg
+    # - npm run heatmap-agg
+  artifacts:
+    - .db-sqlite/
 
 analyze:on-schedule:
   stage: analyze
@@ -96,6 +77,8 @@ analyze:on-schedule:
   script:
     - npm run analyze-companies
     - npm run analyze-jobs
+  artifacts:
+    - .db-sqlite/
 
 pages:
   stage: deploy
