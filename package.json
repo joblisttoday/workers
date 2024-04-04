@@ -35,7 +35,6 @@
 		"@joblist/components": "^0.0.13",
 		"date-fns": "^3.3.1",
 		"dotenv": "^16.3.1",
-		"gray-matter": "^4.0.3",
 		"jsdom": "^22.1.0",
 		"node-fetch": "^3.3.2",
 		"simple-git": "^3.19.1",
