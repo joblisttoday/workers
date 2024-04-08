@@ -7,14 +7,14 @@ WITH RECURSIVE dates(date) AS (
     FROM dates
     WHERE date < DATE('now')         -- End date
 ),
-company_slugs AS (
+company_ids AS (
     SELECT DISTINCT
-        company_slug
+        company_id
     FROM jobs
 )
 SELECT
     c.date AS date,
-    s.company_slug AS slug,
+    s.company_id AS id,
     COUNT(j.ObjectId) AS total,
     strftime('%Y', c.date) AS year,
     strftime('%m', c.date) AS month,
@@ -22,10 +22,10 @@ SELECT
     strftime('%j', c.date) AS doy,
     strftime('%W', c.date) AS woy
 FROM dates c
-CROSS JOIN company_slugs s
+CROSS JOIN company_ids i
 LEFT JOIN jobs j
     ON DATE(j.published_date) = c.date
-        AND j.company_slug = s.company_slug
+        AND j.company_id = s.company_id
 GROUP BY
-    c.date, s.company_slug
+    c.date, i.company_id
 ;

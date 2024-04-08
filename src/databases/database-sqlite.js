@@ -65,19 +65,19 @@ const insertOrUpdateCompany = async (db, company) => {
 	company.tags = JSON.stringify(company.tags);
 	const fields = Object.keys(company);
 	const values = Object.values(company);
-	await insertOrUpdate(db, "companies", fields, values, "slug");
+	await insertOrUpdate(db, "companies", fields, values, "id");
 };
 
 const insertOrUpdateJob = async (db, job) => {
 	const fields = Object.keys(job);
 	const values = Object.values(job);
-	await insertOrUpdate(db, "jobs", fields, values, "objectID");
+	await insertOrUpdate(db, "jobs", fields, values, "id");
 };
 
 const insertOrUpdateCompanyToHighlight = async (db, checkoutSessionCompany) => {
 	const fields = Object.keys(checkoutSessionCompany);
 	const values = Object.values(checkoutSessionCompany);
-	await insertOrUpdate(db, "highlight_companies", fields, values, "slug");
+	await insertOrUpdate(db, "highlight_companies", fields, values, "id");
 };
 
 export {

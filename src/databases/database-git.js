@@ -61,7 +61,10 @@ export const getFileContents = (dir, fileNames) => {
 		} catch (err) {
 			console.error("Error reading files", err);
 		}
-		return JSON.parse(content)
+		return {
+			...JSON.parse(content),
+			id: name,
+		}
 	});
 
 	return fileContents;

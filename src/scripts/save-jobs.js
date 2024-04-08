@@ -1,6 +1,7 @@
 import "../utils/fetch-polyfill.js";
 import "../utils/domparser-polyfill.js";
 
+
 import { getAllCompaniesWithProvider } from "../databases/database-git.js";
 import {
 	initDb,
@@ -8,9 +9,7 @@ import {
 	insertOrUpdateJobs,
 } from "../databases/database-sqlite.js";
 
-import joblist from "@joblist/components";
-
-const { providers } = joblist;
+import providers from "@joblist/components/providers";
 
 const init = async () => {
 	const db = await initDb();
@@ -26,7 +25,7 @@ const init = async () => {
 			const companyJobsPromise = provider.getJobs({
 				hostname: company["job_board_hostname"],
 				companyTitle: company.title,
-				companySlug: company.slug,
+				companyId: company.id,
 			});
 			acc.push(companyJobsPromise);
 		}
@@ -55,12 +54,12 @@ const init = async () => {
 // we serialize the jobs to `_` notation
 const serializeJobs = (jobs) => {
 	return jobs.map((job) => ({
-		objectID: job.objectID,
+		id: job.objectID,
 		name: job.name,
 		url: job.url,
 		location: job.location,
-		published_date: job.publishedDate,
-		company_slug: job.companySlug,
+		published_date: job.publishedDate || "",
+		company_id: job.companyId,
 		company_title: job.companyTitle,
 	}));
 };

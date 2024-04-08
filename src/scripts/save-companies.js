@@ -14,6 +14,7 @@ const init = async () => {
 	await executeSqlFile(db, "companies_fts_table.sql");
 	await executeSqlFile(db, "companies_trigger.sql");
 	const companies = await getAllCompanies();
+	console.log(companies)
 	await insertOrUpdateCompanies(db, companies);
 	// no need to serialize companies, lets do it at the level of sql
 };

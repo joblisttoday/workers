@@ -10,9 +10,9 @@ const init = async () => {
 
 	/* update the pubic joblist db with the info */
 	const db = await initDb();
-	for (const { slug } of companiesToHighight) {
-		db.run("UPDATE companies SET is_highlighted = ? WHERE slug = ?", 1, slug);
-		console.info("Highlighted company", slug);
+	for (const { id } of companiesToHighight) {
+		db.run("UPDATE companies SET is_highlighted = ? WHERE id = ?", 1, id);
+		console.info("Highlighted company", id);
 	}
 };
 

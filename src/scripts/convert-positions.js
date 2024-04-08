@@ -34,7 +34,7 @@ const serializeCompany = (company) => {
 	/* originla data */
 	const {
 		title,
-		slug,
+		id,
 		description,
 		tags,
 		company_url,
@@ -55,8 +55,8 @@ const serializeCompany = (company) => {
 	if (title) {
 		sCompany["title"] = title;
 	}
-	if (slug) {
-		sCompany["slug"] = slug;
+	if (id) {
+		sCompany["id"] = id;
 	}
 	if (description) {
 		sCompany["description"] = description;

@@ -1,8 +1,6 @@
 CREATE TABLE IF NOT EXISTS companies (
-	slug TEXT PRIMARY KEY,
+	id TEXT PRIMARY KEY,
 	title TEXT,
-	created_at TEXT,
-	updated_at TEXT,
 	company_url TEXT,
 	job_board_url TEXT,
 	job_board_provider TEXT,

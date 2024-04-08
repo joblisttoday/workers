@@ -6,7 +6,7 @@
 	"type": "module",
 	"scripts": {
 		"help": "echo 'Run the command `npm run` to see all jobs, ordered by run-order'",
-		"build-db": "./src/scripts/build-db.sh",
+		"build": "./src/scripts/build.sh",
 		"database-git": "node src/scripts/database-git.js",
 		"database-stripe": "node src/scripts/database-stripe.js",
 		"save-companies": "node src/scripts/save-companies.js",
@@ -32,7 +32,7 @@
 	},
 	"homepage": "https://gitlab.com/joblist/workers#readme",
 	"dependencies": {
-		"@joblist/components": "^0.0.13",
+		"@joblist/components": "^0.0.30",
 		"date-fns": "^3.3.1",
 		"dotenv": "^16.3.1",
 		"jsdom": "^22.1.0",

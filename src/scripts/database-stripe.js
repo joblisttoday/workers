@@ -66,16 +66,16 @@ const getCompaniesToHighlight = async () => {
 	return csWithCustomFields
 		.map((checkoutSession) => {
 			const { id: cs_id, custom_fields } = checkoutSession;
-			const companyHighlightSlug = custom_fields[0][COMPANY_HIGHLIGHT];
-			return { cs_id, slug: companyHighlightSlug };
+			const companyHighlightId = custom_fields[0][COMPANY_HIGHLIGHT];
+			return { cs_id, id: companyHighlightId };
 		})
-		.filter(({ slug }) => !!slug);
+		.filter(({ id }) => !!id);
 };
 
 const init = async () => {
 	const companiesToHighlight = await getCompaniesToHighlight();
 	companiesToHighlight.forEach(async (company) => {
-		if (!company.slug) {
+		if (!company.id) {
 			console.info(
 				"Cannot highlight company (see checkout session id)",
 				company,

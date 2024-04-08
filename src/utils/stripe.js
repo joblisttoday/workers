@@ -13,14 +13,14 @@ export const getCompanyHighlight = (fieldValue) => {
 	} else if (fieldValue) {
 		val = fieldValue;
 	}
-	let companySlug;
+	let companyId;
 	try {
 		const url = new URL(`https://example.org/${val}`);
-		companySlug = url.pathname.split("/")[1];
+		companyId = url.pathname.split("/")[1];
 	} catch (e) {
 		console.info("Invalid company highlight custom field value");
 	}
-	return companySlug;
+	return companyId;
 };
 
 export const getCustomField = (customField) => {
