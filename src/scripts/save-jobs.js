@@ -54,7 +54,7 @@ const init = async () => {
 // we serialize the jobs to `_` notation
 const serializeJobs = (jobs) => {
 	return jobs.map((job) => ({
-		id: job.objectID,
+		id: job.id,
 		name: job.name,
 		url: job.url,
 		location: job.location,
