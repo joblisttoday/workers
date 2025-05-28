@@ -1,7 +1,17 @@
+import { rmSync } from "fs";
 import sqlite3 from "sqlite3";
 import { open } from "sqlite";
 import fs from "fs";
 import path from "path";
+
+const removeDb = async (filename = "joblist.db") => {
+	const databaseDir = `./.db-sqlite/${filename}`;
+	try {
+		rmSync(databaseDir, { recursive: true, force: true });
+	} catch (error) {
+		console.error(`Error while deleting ${databaseDir}`, error);
+	}
+};
 
 const initDb = async (filename = "joblist.db") => {
 	return open({
@@ -81,6 +91,7 @@ const insertOrUpdateCompanyToHighlight = async (db, checkoutSessionCompany) => {
 };
 
 export {
+	removeDb,
 	initDb,
 	insertOrUpdateCompany,
 	insertOrUpdateCompanies,

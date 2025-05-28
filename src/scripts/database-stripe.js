@@ -3,7 +3,7 @@ import { subDays } from "date-fns";
 import {
 	initDb,
 	initStripe,
-	gatherCheckoutSessions,
+	gatherRecentCheckoutSessions,
 } from "../databases/database-stripe.js";
 
 import {
@@ -21,55 +21,27 @@ const { STRIPE_SECRET } = process.env;
 
 const getCompaniesToHighlight = async () => {
 	const stripe = initStripe(STRIPE_SECRET);
-	const timestamp = subDays(new Date(), 31).getTime();
-	const checkoutSessions = await gatherCheckoutSessions(stripe, {
-		limit: 100,
-		created: {
-			lte: timestamp,
-		},
-	});
-	const companyHighlightCustomFields = [COMPANY_HIGHLIGHT];
-	const csWithCustomFields = getCheckoutSessionsCustomFields(
-		checkoutSessions,
-		companyHighlightCustomFields,
-	);
 
-	const csWithCustomFieldsDict = Object.fromEntries(
-		csWithCustomFields.map(({ id }) => [id, true]),
-	);
-	const missingCustomFieldOnSessions =
-		csWithCustomFields.length !== checkoutSessions.length;
+	const [checkoutSessions] = await Promise.all([
+		gatherRecentCheckoutSessions(stripe),
+	]);
 
-	if (missingCustomFieldOnSessions) {
-		const sessionsMissingCustomFields = checkoutSessions.reduce((acc, cs) => {
-			const csHasField = csWithCustomFieldsDict[cs.id] === true;
-			if (!csHasField) {
-				acc.push(cs);
-			}
-			return acc;
-		}, []);
+	const activeCompanyIds = new Set();
 
-		if (sessionsMissingCustomFields.length) {
-			sessionsMissingCustomFields.forEach(({ id, custom_fields }) => {
-				console.info(
-					"Missing required custom fields on checkout session, and cannot be processed",
-					{ id, missing_fields: companyHighlightCustomFields, custom_fields },
-				);
-			});
-		}
-	} else {
-		console.info(
-			"All checkout sessions have the required custom fields to be processed",
+	// 1. From checkout sessions (recent paid or sub starts)
+	for (const session of checkoutSessions) {
+		const customFields = session.custom_fields ?? [];
+		const highlightField = customFields.find(
+			(field) => field.key === COMPANY_HIGHLIGHT,
 		);
+		const value = highlightField?.text?.value.toLowerCase().trim();
+		if (value) {
+			activeCompanyIds.add(value);
+		}
 	}
 
-	return csWithCustomFields
-		.map((checkoutSession) => {
-			const { id: cs_id, custom_fields } = checkoutSession;
-			const companyHighlightId = custom_fields[0][COMPANY_HIGHLIGHT];
-			return { cs_id, id: companyHighlightId };
-		})
-		.filter(({ id }) => !!id);
+	// Convert to array of { id, cs_id: optional }
+	return Array.from(activeCompanyIds).map((id) => ({ id }));
 };
 
 const init = async () => {
