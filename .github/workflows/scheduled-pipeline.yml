@@ -1,0 +1,144 @@
+name: Scheduled Pipeline
+
+on:
+  schedule:
+    - cron: "0 0 * * *" # Adjust as needed
+  workflow_dispatch: # Allows manual trigger
+
+jobs:
+  install-dependencies:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Cache node_modules
+        uses: actions/cache@v4
+        with:
+          path: node_modules
+          key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: "latest"
+
+      - run: npm install
+
+      - name: Upload node_modules
+        uses: actions/upload-artifact@v4
+        with:
+          name: node_modules
+          path: node_modules
+
+  data:
+    runs-on: ubuntu-latest
+    needs: install-dependencies
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/download-artifact@v4
+        with:
+          name: node_modules
+          path: node_modules
+
+      - run: npm run database-git
+      - run: npm run database-stripe
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: db-data
+          path: |
+            .db-github-data/
+            .db-sqlite/
+
+  save-companies:
+    runs-on: ubuntu-latest
+    needs: data
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/download-artifact@v4
+        with:
+          name: db-data
+
+      - run: npm run save-companies
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: db-sqlite
+          path: .db-sqlite/
+
+  save-jobs:
+    runs-on: ubuntu-latest
+    needs: [data, save-companies]
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/download-artifact@v4
+        with:
+          name: db-sqlite
+
+      - run: npm run save-jobs
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: db-sqlite
+          path: .db-sqlite/
+
+  processing-jobs:
+    runs-on: ubuntu-latest
+    needs: save-jobs
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/download-artifact@v4
+        with:
+          name: db-sqlite
+
+      - run: npm run processing-companies
+      - run: npm run processing-jobs
+      - run: npm run processing-stripe
+      # - run: npm run heatmap-agg
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: db-sqlite
+          path: .db-sqlite/
+
+  analyze:
+    runs-on: ubuntu-latest
+    needs: processing-jobs
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/download-artifact@v4
+        with:
+          name: db-sqlite
+
+      - run: npm run analyze-companies
+      - run: npm run analyze-jobs
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: db-sqlite
+          path: .db-sqlite/
+
+  deploy:
+    runs-on: ubuntu-latest
+    needs: analyze
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/download-artifact@v4
+        with:
+          name: db-sqlite
+
+      - name: Prepare public folder
+        run: |
+          mkdir -p public
+          mv .db-sqlite/joblist.db public/
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: public
+          path: public/
