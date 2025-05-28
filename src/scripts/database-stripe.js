@@ -45,6 +45,7 @@ const getCompaniesToHighlight = async () => {
 };
 
 const init = async () => {
+	console.log("init init stripe");
 	const companiesToHighlight = await getCompaniesToHighlight();
 	companiesToHighlight.forEach(async (company) => {
 		if (!company.id) {
@@ -54,6 +55,7 @@ const init = async () => {
 			);
 		}
 	});
+	console.log("companiesToHighlight", companiesToHighlight);
 	const stripeDb = await initDb();
 	await executeSqlFile(stripeDb, "stripe/highlight_companies_table.sql");
 	await insertOrUpdateCompaniesToHighlight(stripeDb, companiesToHighlight);
