@@ -41,7 +41,7 @@ jobs:
           name: node_modules
           path: node_modules
 
-      - run: npm run database-git
+      - run: echo "runnnn" # npm run database-git
       - run: npm run database-stripe
         with:
           env:
