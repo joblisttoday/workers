@@ -33,6 +33,9 @@ jobs:
   data:
     runs-on: ubuntu-latest
     needs: install-dependencies
+    env:
+      STRIPE_ENDPOINT_SECRET: ${{ secrets.STRIPE_ENDPOINT_SECRET }}
+      STRIPE_SECRET: ${{ secrets.STRIPE_SECRET }}
     steps:
       - uses: actions/checkout@v4
 
