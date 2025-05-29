@@ -1,0 +1,36 @@
+name: Scheduled Pipeline
+
+on:
+  schedule:
+    - cron: "0 0 * * *" # Adjust as needed
+  workflow_dispatch: # Allows manual trigger
+
+jobs:
+  install-dependencies:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+      - run: npm install
+      - run: npm run database-git
+      - run: npm run database-stripe
+        with:
+          env:
+            STRIPE_ENDPOINT_SECRET: ${{ secrets.STRIPE_ENDPOINT_SECRET }}
+            STRIPE_SECRET: ${{ secrets.STRIPE_SECRET }}
+      - run: npm run save-companies
+      - run: npm run save-jobs
+      - run: npm run processing-companies
+      - run: npm run processing-jobs
+      - run: npm run processing-stripe
+      # - run: npm run heatmap-agg
+      - run: npm run analyze-companies
+      - run: npm run analyze-jobs
+      - name: Prepare public folder
+        run: |
+          mkdir -p public
+          mv .db-sqlite/joblist.db public/
+      - uses: actions/upload-artifact@v4
+        with:
+          name: public
+          path: public/
