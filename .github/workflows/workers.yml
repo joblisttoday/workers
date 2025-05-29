@@ -1,4 +1,4 @@
-name: Scheduled Pipeline
+name: Workers build DB
 
 on:
   schedule:
