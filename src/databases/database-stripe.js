@@ -6,7 +6,7 @@ import { initDb as initSqliteDb, removeDb } from "./database-sqlite.js";
 const databaseFileName = "stripe.db";
 
 export const initDb = (database = databaseFileName) => {
-	removeDb(database);
+	/* removeDb(database); */
 	return initSqliteDb(database);
 };
 
