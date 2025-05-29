@@ -1,58 +1,147 @@
-name: Workers build DB
+name: Scheduled Pipeline
 
 on:
   schedule:
-    - cron: "0 5 * * *" # Adjust as needed
+    - cron: "0 0 * * *" # Adjust as needed
   workflow_dispatch: # Allows manual trigger
 
-# Sets permissions of the GITHUB_TOKEN to allow deployment to GitHub Pages
-permissions:
-  contents: read
-  pages: write
-  id-token: write
-
-# Allow only one concurrent deployment, skipping runs queued between the run in-progress and latest queued.
-# However, do NOT cancel in-progress runs as we want to allow these production deployments to complete.
-concurrency:
-  group: "pages"
-  cancel-in-progress: false
-
 jobs:
-  build-db:
+  install-dependencies:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - uses: actions/setup-node@v4
+
+      - name: Cache node_modules
+        uses: actions/cache@v4
+        with:
+          path: node_modules
+          key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: "lts/*"
+
       - run: npm install
+
+      - name: Upload node_modules
+        uses: actions/upload-artifact@v4
+        with:
+          name: node_modules
+          path: node_modules
+
+  data:
+    runs-on: ubuntu-latest
+    needs: install-dependencies
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/download-artifact@v4
+        with:
+          name: node_modules
+          path: node_modules
+
       - run: npm run database-git
       - run: npm run database-stripe
         env:
           STRIPE_ENDPOINT_SECRET: ${{ secrets.STRIPE_ENDPOINT_SECRET }}
           STRIPE_SECRET: ${{ secrets.STRIPE_SECRET }}
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: db-data
+          path: |
+            .db-github-data/
+            .db-sqlite/
+
+  save-companies:
+    runs-on: ubuntu-latest
+    needs: data
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/download-artifact@v4
+        with:
+          name: db-data
+
       - run: npm run save-companies
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: db-sqlite
+          path: .db-sqlite/
+
+  save-jobs:
+    runs-on: ubuntu-latest
+    needs: [data, save-companies]
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/download-artifact@v4
+        with:
+          name: db-sqlite
+
       - run: npm run save-jobs
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: db-sqlite
+          path: .db-sqlite/
+
+  processing-jobs:
+    runs-on: ubuntu-latest
+    needs: save-jobs
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/download-artifact@v4
+        with:
+          name: db-sqlite
+
       - run: npm run processing-companies
       - run: npm run processing-jobs
       - run: npm run processing-stripe
       # - run: npm run heatmap-agg
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: db-sqlite
+          path: .db-sqlite/
+
+  analyze:
+    runs-on: ubuntu-latest
+    needs: processing-jobs
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/download-artifact@v4
+        with:
+          name: db-sqlite
+
       - run: npm run analyze-companies
       - run: npm run analyze-jobs
-      - name: Prepare public folder
-        run: |
-          mkdir -p public/workers
-          mv .db-sqlite/joblist.db public/workers/
-      - name: Upload Pages artifact
-        uses: actions/upload-pages-artifact@v3
+
+      - uses: actions/upload-artifact@v4
         with:
-          path: public/
+          name: db-sqlite
+          path: .db-sqlite/
 
   deploy:
-    environment:
-      name: github-pages
-      url: ${{ steps.deployment.outputs.page_url }}
     runs-on: ubuntu-latest
-    needs: build-db
+    needs: analyze
     steps:
-      - name: Deploy to GitHub Pages
-        id: deployment
-        uses: actions/deploy-pages@v4
+      - uses: actions/checkout@v4
+
+      - uses: actions/download-artifact@v4
+        with:
+          name: db-sqlite
+
+      - name: Prepare public folder
+        run: |
+          mkdir -p public
+          mv .db-sqlite/joblist.db public/
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: public
+          path: public/
