@@ -14,10 +14,9 @@ jobs:
       - run: npm install
       - run: npm run database-git
       - run: npm run database-stripe
-        with:
-          env:
-            STRIPE_ENDPOINT_SECRET: ${{ secrets.STRIPE_ENDPOINT_SECRET }}
-            STRIPE_SECRET: ${{ secrets.STRIPE_SECRET }}
+        env:
+          STRIPE_ENDPOINT_SECRET: ${{ secrets.STRIPE_ENDPOINT_SECRET }}
+          STRIPE_SECRET: ${{ secrets.STRIPE_SECRET }}
       - run: npm run save-companies
       - run: npm run save-jobs
       - run: npm run processing-companies
