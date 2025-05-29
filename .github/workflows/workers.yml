@@ -39,15 +39,22 @@ jobs:
       - run: npm run analyze-jobs
       - name: Prepare public folder
         run: |
-          mkdir -p public/workers
-          mv .db-sqlite/joblist.db public/workers/
-
+          mkdir -p public
+          mv .db-sqlite/joblist.db public/
+      - name: Generate index.html with redirect
+        run: |
+          cat > public/index.html << 'EOF'
+          <!DOCTYPE html>
+          <html>
+          <head>
+              <meta http-equiv="refresh" content="0; url=./joblist.db">
+          </head>
+          </html>
+          EOF
       - name: Verify files exist
         run: |
           echo "Contents of public directory:"
           ls -la public/
-          echo "Contents of public/workers directory:"
-          ls -la public/workers/
       - name: Upload artifact
         uses: actions/upload-artifact@v4
         with:
