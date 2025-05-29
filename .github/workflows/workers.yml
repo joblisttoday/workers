@@ -6,7 +6,7 @@ on:
   workflow_dispatch: # Allows manual trigger
 
 jobs:
-  install-dependencies:
+  build-db:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
