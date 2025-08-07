@@ -1,14 +1,34 @@
-import { initDb } from "../databases/database-sqlite.js";
+import { initDb, removeDb } from "../databases/database-sqlite.js";
+import fs from "fs";
 
 const optimizeDatabase = async (filename = "joblist.db") => {
 	console.log("Optimizing database for sql.js-httpvfs...");
+	const dbPath = `./.db-sqlite/${filename}`;
+	
+	// Check if database exists and get current page size
+	let needsRecreation = false;
+	if (fs.existsSync(dbPath)) {
+		const checkDb = await initDb(filename);
+		const currentPageSize = await checkDb.get("PRAGMA page_size;");
+		await checkDb.close();
+		
+		if (currentPageSize.page_size !== 1024) {
+			console.log(`Current page size is ${currentPageSize.page_size}, need to recreate database with page_size=1024`);
+			needsRecreation = true;
+		}
+	}
+
+	if (needsRecreation) {
+		console.log("Database needs recreation for proper page size. This should be done by running the full build process.");
+		console.log("Current database will be optimized in place with other improvements...");
+	}
+
 	const db = await initDb(filename);
 
 	try {
-		// Step 1: Set page size to 1024 (as recommended by sql.js-httpvfs docs)
-		console.log("Setting journal mode and page size...");
-		await db.exec("PRAGMA journal_mode = DELETE;"); // Required to change page size
-		await db.exec("PRAGMA page_size = 1024;"); // Recommended for httpvfs
+		// Step 1: Set journal mode (page size can only be set on empty database)
+		console.log("Setting journal mode...");
+		await db.exec("PRAGMA journal_mode = DELETE;");
 
 		// Step 2: Optimize FTS tables if they exist
 		console.log("Optimizing FTS tables...");

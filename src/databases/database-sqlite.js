@@ -14,10 +14,20 @@ const removeDb = async (filename = "joblist.db") => {
 };
 
 const initDb = async (filename = "joblist.db") => {
-	return open({
+	const db = await open({
 		filename: `./.db-sqlite/${filename}`,
 		driver: sqlite3.Database,
 	});
+	
+	// Optimize for sql.js-httpvfs on first creation
+	try {
+		await db.exec("PRAGMA journal_mode = DELETE;");
+		await db.exec("PRAGMA page_size = 1024;");
+	} catch (error) {
+		console.warn("Could not set page size (database may already contain data):", error.message);
+	}
+	
+	return db;
 };
 
 /* general db utils */
