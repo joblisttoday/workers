@@ -16,6 +16,7 @@
 		"processing-stripe": "node src/scripts/processing-stripe.js",
 		"analyze-companies": "node src/scripts/analyze-companies.js",
 		"analyze-jobs": "node src/scripts/analyze-jobs.js",
+		"optimize-database": "node src/scripts/optimize-database.js",
 		"UNUSED-JOBS": "echo 'Jobs below are not used'",
 		"convert-positions": "node src/scripts/convert-positions.js",
 		"heatmap-agg": "node src/scripts/heatmap-agg.js",
