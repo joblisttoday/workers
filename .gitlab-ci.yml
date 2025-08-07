@@ -81,6 +81,7 @@ analyze:on-schedule:
   script:
     - npm run analyze-companies
     - npm run analyze-jobs
+    - npm run optimize-database
   artifacts:
     paths:
       - .db-sqlite/
