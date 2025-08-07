@@ -12,9 +12,7 @@ import {
 const init = async () => {
 	// Remove existing database to ensure clean start with proper page size
 	await removeDb();
-	const db = await initDb();
-	// Execute optimization BEFORE creating any tables
-	await executeSqlFile(db, "optimize_for_httpvfs.sql");
+	const db = await initDb(); // This now sets page_size=1024 internally
 	await executeSqlFile(db, "companies_table.sql");
 	await executeSqlFile(db, "companies_fts_table.sql");
 	await executeSqlFile(db, "companies_trigger.sql");

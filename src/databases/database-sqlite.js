@@ -19,6 +19,20 @@ const initDb = async (filename = "joblist.db") => {
 		driver: sqlite3.Database,
 	});
 	
+	// CRITICAL: Set page size immediately after DB creation, before any tables
+	console.log("Setting page size for sql.js-httpvfs optimization...");
+	await db.exec("PRAGMA journal_mode = DELETE");
+	await db.exec("PRAGMA page_size = 1024");
+	
+	// Verify the settings
+	const pageSize = await db.get("PRAGMA page_size");
+	const journalMode = await db.get("PRAGMA journal_mode");
+	console.log(`Database settings: page_size=${pageSize.page_size}, journal_mode=${journalMode.journal_mode}`);
+	
+	if (pageSize.page_size !== 1024) {
+		console.error(`WARNING: Failed to set page_size to 1024, got ${pageSize.page_size}`);
+	}
+	
 	return db;
 };
 
