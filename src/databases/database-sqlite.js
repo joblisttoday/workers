@@ -19,16 +19,6 @@ const initDb = async (filename = "joblist.db") => {
 		driver: sqlite3.Database,
 	});
 	
-	// Optimize for sql.js-httpvfs - set page size BEFORE creating any tables
-	console.log("Setting database optimization for sql.js-httpvfs...");
-	await db.exec("PRAGMA journal_mode = DELETE;");
-	await db.exec("PRAGMA page_size = 1024;");
-	
-	// Verify settings were applied
-	const pageSize = await db.get("PRAGMA page_size;");
-	const journalMode = await db.get("PRAGMA journal_mode;");
-	console.log(`Database initialized with page_size=${pageSize.page_size}, journal_mode=${journalMode.journal_mode}`);
-	
 	return db;
 };
 
