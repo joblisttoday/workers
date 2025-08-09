@@ -1,108 +1,83 @@
 import duckdb from 'duckdb';
 import fs from 'fs';
 import path from 'path';
+import { fileURLToPath } from 'url';
 
-const generateParquetFromSQLite = async (sqliteFilename = 'joblist.db') => {
-    console.log('=== Generating Parquet files from SQLite database ===');
-    
-    const sqlitePath = path.resolve(`./.db-sqlite/${sqliteFilename}`);
-    const parquetDir = './.db-duckdb';
-    
-    // Ensure SQLite file exists
-    if (!fs.existsSync(sqlitePath)) {
-        throw new Error(`SQLite database not found: ${sqlitePath}`);
+const ensureDir = (dir) => {
+  if (!fs.existsSync(dir)) fs.mkdirSync(dir, { recursive: true });
+};
+
+// Create a single DuckDB database file populated from the SQLite source.
+const generateDuckDBFromSQLite = async (sqliteFilename = 'joblist.db') => {
+  console.log('=== Building DuckDB from SQLite ===');
+
+  const sqlitePath = path.resolve(`./.db-sqlite/${sqliteFilename}`);
+  const outDir = './.db-duckdb';
+  const outFile = path.join(outDir, 'joblist.duckdb');
+
+  if (!fs.existsSync(sqlitePath)) {
+    throw new Error(`SQLite database not found: ${sqlitePath}`);
+  }
+
+  ensureDir(outDir);
+  if (fs.existsSync(outFile)) fs.unlinkSync(outFile);
+
+  try {
+    console.log('Initializing DuckDB (file-backed)...');
+    const db = new duckdb.Database(outFile);
+
+    // Decide which tables to import (no listing step)
+    const envList = process.env.DUCKDB_TABLES || '';
+    const tables = envList
+      .split(',')
+      .map((s) => s.trim())
+      .filter(Boolean);
+
+    const tablesToImport = tables.length ? tables : ['jobs', 'companies'];
+
+    console.log(`Importing tables: ${tablesToImport.join(', ')}`);
+
+    // Helper to safely quote identifiers
+    const qident = (name) => `"${String(name).replace(/"/g, '""')}"`;
+
+    for (const table of tablesToImport) {
+      console.log(`Importing ${table}...`);
+      await new Promise((resolve, reject) => {
+        db.run(`CREATE OR REPLACE TABLE ${qident(table)} AS SELECT * FROM sqlite_scan('${sqlitePath}', '${table}');`, (err) =>
+          err ? reject(err) : resolve()
+        );
+      });
     }
-    
-    // Create parquet directory if it doesn't exist
-    if (!fs.existsSync(parquetDir)) {
-        fs.mkdirSync(parquetDir, { recursive: true });
-    }
-    
-    try {
-        console.log('Initializing DuckDB...');
-        const duckDb = new duckdb.Database(':memory:');
-        
-        // Install and load SQLite extension
-        await new Promise((resolve, reject) => {
-            duckDb.run(`INSTALL sqlite; LOAD sqlite;`, (err) => {
-                if (err) reject(err);
-                else resolve();
-            });
-        });
-        
-        // Get list of tables directly from SQLite using DuckDB
-        console.log('Getting table list...');
-        const tables = await new Promise((resolve, reject) => {
-            duckDb.all(`
-                SELECT tbl_name 
-                FROM sqlite_scan('${sqlitePath}', 'sqlite_master') 
-                WHERE type = 'table' 
-                AND tbl_name NOT LIKE 'sqlite_%' 
-                AND tbl_name NOT LIKE '%_fts%'
-                AND tbl_name NOT LIKE '%_fts_%'
-            `, (err, rows) => {
-                if (err) reject(err);
-                else resolve(rows);
-            });
-        });
-        
-        console.log(`Found ${tables.length} tables to export:`, tables.map(t => t.tbl_name).join(', '));
-        
-        // Export each table to parquet
-        for (const table of tables) {
-            const tableName = table.tbl_name;
-            const parquetPath = `${parquetDir}/${tableName}.parquet`;
-            
-            console.log(`Exporting ${tableName} to parquet...`);
-            
-            // Remove existing parquet file
-            if (fs.existsSync(parquetPath)) {
-                fs.unlinkSync(parquetPath);
-            }
-            
-            // Export directly to parquet using sqlite_scan
-            await new Promise((resolve, reject) => {
-                duckDb.run(`COPY (SELECT * FROM sqlite_scan('${sqlitePath}', '${tableName}')) TO '${parquetPath}' (FORMAT PARQUET);`, (err) => {
-                    if (err) reject(err);
-                    else resolve();
-                });
-            });
-            
-            // Get file size for reporting
-            const stats = fs.statSync(parquetPath);
-            console.log(`✅ Exported ${tableName}: ${Math.round(stats.size / 1024)} KB`);
-        }
-        
-        // Close connection
-        await new Promise((resolve) => {
-            duckDb.close(resolve);
-        });
-        
-        // Calculate total size
-        const totalSize = fs.readdirSync(parquetDir)
-            .filter(file => file.endsWith('.parquet'))
-            .map(file => fs.statSync(`${parquetDir}/${file}`).size)
-            .reduce((a, b) => a + b, 0);
-            
-        console.log(`✅ Parquet export completed successfully!`);
-        console.log(`   Directory: ${parquetDir}`);
-        console.log(`   Total size: ${Math.round(totalSize / 1024)} KB`);
-        console.log(`   Files exported: ${tables.length}`);
-        
-    } catch (error) {
-        console.error('Error generating Parquet files:', error);
-        throw error;
-    }
+
+    // Optional: checkpoint to ensure data is persisted
+    await new Promise((resolve, reject) => {
+      db.run(`CHECKPOINT;`, (err) => (err ? reject(err) : resolve()))
+    });
+
+    await new Promise((resolve) => db.close(resolve));
+
+    const sizeKB = Math.round(fs.statSync(outFile).size / 1024);
+    console.log('✅ DuckDB build complete');
+    console.log(`   File: ${outFile}`);
+    console.log(`   Size: ${sizeKB} KB`);
+  } catch (error) {
+    console.error('Error generating DuckDB file:', error);
+    throw error;
+  }
 };
 
 const init = async () => {
-    await generateParquetFromSQLite();
+  await generateDuckDBFromSQLite();
 };
 
-// Run if called directly
-if (process.argv[1].endsWith('generate-duckdb.js')) {
-    init();
+// Run if called directly (robust for ESM)
+try {
+  const thisFile = fileURLToPath(import.meta.url);
+  const calledAsScript = process.argv && process.argv[1] && path.resolve(process.argv[1]) === path.resolve(thisFile);
+  if (calledAsScript) init();
+} catch (_) {
+  // ignore when imported programmatically
 }
 
-export { generateParquetFromSQLite };
+export { generateDuckDBFromSQLite };
 export default init;
