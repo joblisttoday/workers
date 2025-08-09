@@ -34,23 +34,23 @@ const generateParquetFromSQLite = async (sqliteFilename = 'joblist.db') => {
         console.log('Getting table list...');
         const tables = await new Promise((resolve, reject) => {
             duckDb.all(`
-                SELECT table_name 
+                SELECT tbl_name 
                 FROM sqlite_scan('${sqlitePath}', 'sqlite_master') 
                 WHERE type = 'table' 
-                AND table_name NOT LIKE 'sqlite_%' 
-                AND table_name NOT LIKE '%_fts%'
-                AND table_name NOT LIKE '%_fts_%'
+                AND tbl_name NOT LIKE 'sqlite_%' 
+                AND tbl_name NOT LIKE '%_fts%'
+                AND tbl_name NOT LIKE '%_fts_%'
             `, (err, rows) => {
                 if (err) reject(err);
                 else resolve(rows);
             });
         });
         
-        console.log(`Found ${tables.length} tables to export:`, tables.map(t => t.table_name).join(', '));
+        console.log(`Found ${tables.length} tables to export:`, tables.map(t => t.tbl_name).join(', '));
         
         // Export each table to parquet
         for (const table of tables) {
-            const tableName = table.table_name;
+            const tableName = table.tbl_name;
             const parquetPath = `${parquetDir}/${tableName}.parquet`;
             
             console.log(`Exporting ${tableName} to parquet...`);

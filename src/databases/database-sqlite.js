@@ -52,14 +52,26 @@ const insertOrUpdate = async (db, table, fields, values, conflictColumn) => {
 };
 
 const insertOrUpdateCompanies = async (db, companies) => {
-	for (const company of companies) {
-		await insertOrUpdateCompany(db, company);
+	try {
+		await db.run('BEGIN TRANSACTION');
+		const promises = companies.map(company => insertOrUpdateCompany(db, company));
+		await Promise.all(promises);
+		await db.run('COMMIT');
+	} catch (err) {
+		await db.run('ROLLBACK');
+		throw err;
 	}
 };
 
 const insertOrUpdateJobs = async (db, jobs) => {
-	for (const job of jobs) {
-		await insertOrUpdateJob(db, job);
+	try {
+		await db.run('BEGIN TRANSACTION');
+		const promises = jobs.map(job => insertOrUpdateJob(db, job));
+		await Promise.all(promises);
+		await db.run('COMMIT');
+	} catch (err) {
+		await db.run('ROLLBACK');
+		throw err;
 	}
 };
 

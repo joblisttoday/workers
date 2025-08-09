@@ -18,35 +18,36 @@ const init = async () => {
 	await executeSqlFile(db, "jobs_trigger.sql");
 
 	const companies = await getAllCompaniesWithProvider();
-	const allCompaniesGetJobs = companies.reduce((acc, company) => {
-		const companyProvider = company["job_board_provider"];
-		const provider = providers[companyProvider];
-		if (typeof provider?.getJobs === "function") {
-			const companyJobsPromise = provider.getJobs({
+	const jobPromises = companies.map(async (company) => {
+		try {
+			const companyProvider = company["job_board_provider"];
+			const provider = providers[companyProvider];
+			if (typeof provider?.getJobs !== "function") {
+				return { company, jobs: [], error: "Invalid provider or getJobs function" };
+			}
+			const jobs = await provider.getJobs({
 				hostname: company["job_board_hostname"],
 				companyTitle: company.title,
 				companyId: company.id,
 			});
-			acc.push(companyJobsPromise);
+			return { company, jobs };
+		} catch (error) {
+			return { company, jobs: [], error };
 		}
-		return acc;
-	}, []);
-	const companiesGetJobsPromises = allCompaniesGetJobs.filter(
-		(company) => !!company,
-	);
-	const responses = await Promise.allSettled(companiesGetJobsPromises)
-		.then((responses) => {
-			return responses.filter((res) => !!res);
-		})
-		.catch((error) => {
-			console.log("Error fetching jobs", error);
-		});
-	let allJobs = [];
-	responses.forEach(({ value: jobs = [] }) => {
-		jobs.forEach((job) => {
-			allJobs.push(job);
-		});
 	});
+
+	const results = await Promise.all(jobPromises);
+	
+	const allJobs = [];
+	results.forEach(result => {
+		const { company, jobs, error } = result;
+		if (error) {
+			console.error(`Error fetching jobs for ${company.title}:`, error.message);
+		} else {
+			allJobs.push(...(jobs || []));
+		}
+	});
+
 	const serializedJobs = serializeJobs(allJobs);
 	await insertOrUpdateJobs(db, serializedJobs);
 };
