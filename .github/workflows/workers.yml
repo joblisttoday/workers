@@ -43,6 +43,7 @@ jobs:
         run: |
           mkdir -p public
           mv .db-sqlite/joblist.db public/
+					cp -r .db-duckdb/*.duckdb public/ || true
           cp -r .db-duckdb/*.parquet public/ || true
       - name: Generate index.html with redirect
         run: |
