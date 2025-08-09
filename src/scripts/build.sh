@@ -10,3 +10,4 @@ npm run analyze-companies
 npm run analyze-jobs
 # npm run heatmap-agg
 npm run optimize-database
+npm run generate-duckdb

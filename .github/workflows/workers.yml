@@ -38,10 +38,12 @@ jobs:
       - run: npm run analyze-companies
       - run: npm run analyze-jobs
       - run: npm run optimize-database
+      - run: npm run generate-duckdb
       - name: Prepare public folder
         run: |
           mkdir -p public
           mv .db-sqlite/joblist.db public/
+          cp -r .db-duckdb/*.parquet public/ || true
       - name: Generate index.html with redirect
         run: |
           cat > public/index.html << 'EOF'

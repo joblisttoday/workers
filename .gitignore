@@ -7,6 +7,12 @@ node_modules/
 # generated sqlite3 database (& recovory) files
 .db-sqlite/*.db
 .db-sqlite/*.db-journal
+.db-duckdb/*.duckdb
+.db-duckdb/*.duckdb.wal
+.db-duckdb/*.db
+.db-duckdb/*.db.wal
+.db-duckdb/*.parquet
+.db-duckdb/temp_*
 
 # the artifacts for gitlab ci
 public/

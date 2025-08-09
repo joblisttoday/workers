@@ -82,15 +82,18 @@ analyze:on-schedule:
     - npm run analyze-companies
     - npm run analyze-jobs
     - npm run optimize-database
+    - npm run generate-duckdb
   artifacts:
     paths:
       - .db-sqlite/
+      - .db-duckdb/
 
 pages:
   stage: deploy
   script:
     - mkdir -p public
     - mv .db-sqlite/joblist.db public/
+    - cp .db-duckdb/*.parquet public/ || true
   artifacts:
     paths:
       - public
