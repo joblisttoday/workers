@@ -14,7 +14,7 @@ const generateDuckDBFromSQLite = async (sqliteFilename = "joblist.db") => {
 	const sqlitePath = path.resolve(`./.db-sqlite/${sqliteFilename}`);
 	const outDir = "./.db-duckdb";
 	const outFile = path.join(outDir, "joblist.duckdb");
-	const parquetDir = path.join(outDir, "parquet");
+	const parquetDir = outDir;
 
 	if (!fs.existsSync(sqlitePath)) {
 		throw new Error(`SQLite database not found: ${sqlitePath}`);
