@@ -35,7 +35,9 @@ const generateDuckDBFromSQLite = async (sqliteFilename = "joblist.db") => {
 			.map((s) => s.trim())
 			.filter(Boolean);
 
-		const tablesToImport = tables.length ? tables : ["jobs", "companies"];
+		const tablesToImport = tables.length
+			? tables
+			: ["jobs", "companies", "jobs_analyze", "companies_analyze"];
 
 		console.log(`Importing tables: ${tablesToImport.join(", ")}`);
 
