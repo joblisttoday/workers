@@ -14,12 +14,14 @@ const generateDuckDBFromSQLite = async (sqliteFilename = "joblist.db") => {
 	const sqlitePath = path.resolve(`./.db-sqlite/${sqliteFilename}`);
 	const outDir = "./.db-duckdb";
 	const outFile = path.join(outDir, "joblist.duckdb");
+	const parquetDir = path.join(outDir, "parquet");
 
 	if (!fs.existsSync(sqlitePath)) {
 		throw new Error(`SQLite database not found: ${sqlitePath}`);
 	}
 
 	ensureDir(outDir);
+	ensureDir(parquetDir);
 	if (fs.existsSync(outFile)) fs.unlinkSync(outFile);
 
 	try {
@@ -54,6 +56,24 @@ const generateDuckDBFromSQLite = async (sqliteFilename = "joblist.db") => {
 		await new Promise((resolve, reject) => {
 			db.run(`CHECKPOINT;`, (err) => (err ? reject(err) : resolve()));
 		});
+
+		// Export Parquet files for each imported table
+		console.log("Exporting Parquet files...");
+		for (const table of tablesToImport) {
+			const parquetPath = path.join(parquetDir, `${table}.parquet`);
+			if (fs.existsSync(parquetPath)) fs.unlinkSync(parquetPath);
+			await new Promise((resolve, reject) => {
+				db.run(
+					`COPY ${qident(table)} TO '${parquetPath}' (FORMAT PARQUET);`,
+					(err) => (err ? reject(err) : resolve()),
+				);
+			});
+
+			const sizeKB = fs.existsSync(parquetPath)
+				? Math.round(fs.statSync(parquetPath).size / 1024)
+				: 0;
+			console.log(`   Wrote ${path.basename(parquetPath)} (${sizeKB} KB)`);
+		}
 
 		await new Promise((resolve) => db.close(resolve));
 
