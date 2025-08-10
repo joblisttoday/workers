@@ -4,6 +4,8 @@ on:
   schedule:
     - cron: "0 0 * * *" # Adjust as needed
   workflow_dispatch: # Allows manual trigger
+  repository_dispatch:
+    types: [payment_received] # Trigger from Stripe webhook
 
 # Sets permissions of the GITHUB_TOKEN to allow deployment to GitHub Pages
 permissions:
