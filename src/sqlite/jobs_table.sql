@@ -4,6 +4,8 @@ CREATE TABLE IF NOT EXISTS jobs (
 	url TEXT,
 	location TEXT,
 	published_date TEXT,
+	employment_type TEXT,
+	department TEXT,
 	company_id TEXT,
 	company_title TEXT
 );
