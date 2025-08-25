@@ -118,6 +118,7 @@ const serializeJobs = (jobs) => {
 		id: job.id,
 		name: job.name,
 		url: job.url,
+		description: job.description || "",
 		location: job.location,
 		published_date: job.publishedDate || "",
 		employment_type: job.employmentType || "",
