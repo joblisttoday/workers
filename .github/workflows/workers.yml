@@ -37,8 +37,7 @@ jobs:
       - run: npm run processing-jobs
       - run: npm run processing-stripe
       # - run: npm run heatmap-agg
-      - run: npm run analyze-companies
-      - run: npm run analyze-jobs
+      - run: npm run analyze-stats
       - run: npm run optimize-database
       - run: npm run generate-duckdb
       - name: Prepare public folder

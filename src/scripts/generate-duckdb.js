@@ -36,8 +36,7 @@ const generateDuckDBFromSQLite = async (sqliteFilename = "joblist.db") => {
 		const tablesToImport = [
 			"jobs",
 			"companies",
-			"jobs_analyze",
-			"companies_analyze",
+			"stats",
 		];
 		const ftsConfigs = {
 			jobs: {

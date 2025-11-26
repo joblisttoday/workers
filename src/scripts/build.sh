@@ -6,8 +6,7 @@ npm run save-jobs
 npm run processing-companies
 npm run processing-jobs
 npm run processing-stripe
-npm run analyze-companies
-npm run analyze-jobs
+npm run analyze-stats
 # npm run heatmap-agg
 npm run optimize-database
 npm run generate-duckdb
